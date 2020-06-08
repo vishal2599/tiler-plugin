@@ -1,0 +1,11 @@
+{
+    "name": "tiler/tiler-plugin",
+    "description": "This is a plugin to generate Tiles on the surfaces. Please Go to page Tiler to view the Awesomeness of the Tiler Plugin",
+    "type": "project",
+    "license": "GPL",
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {"Inc\\": "./inc"}
+    }
+}
