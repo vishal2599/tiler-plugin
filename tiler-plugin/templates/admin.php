@@ -6,4 +6,4 @@
 
 // print_r($page->ID);
 
-echo get_stylesheet_directory();
+// echo get_stylesheet_directory();

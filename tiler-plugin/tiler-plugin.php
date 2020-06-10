@@ -6,7 +6,7 @@
  */
 /*
 Plugin Name: Tiler Plugin
-Description: This is a plugin to generate Tiles on the surfaces. Please Go to page Tiler to view the Awesomeness of the Tiler Plugin
+Description: This is a plugin to generate Tiles for different surfaces. Please Go to page Tiler to view the Awesomeness of the Tiler Plugin. Note: This Plugin imports Tiles from WooCommerce products.
 Version: 1.0.0
 License: GPLv2 or later
 Text Domain: tiler-plugin

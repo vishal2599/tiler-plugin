@@ -26,9 +26,18 @@ class Enqueue extends BaseController
         wp_enqueue_script('jquery', 'https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js');
         
         wp_enqueue_style('bootstrap-css', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css');
-        wp_enqueue_style('flaticon-css', $this->plugin_url . 'assets/frontend/css/flaticon.css');
+        wp_enqueue_script('bootstrap-js', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', array('jquery'));
+        wp_enqueue_style('flaticon-css', $this->plugin_url . 'assets/frontend/css/fonts/flaticon.css');
         wp_enqueue_style('scrollbar-css', $this->plugin_url . 'assets/frontend/css/jquery.scrollbar.css');
         wp_enqueue_style('main-style-css', $this->plugin_url . 'assets/frontend/css/main-style.css');
+
+        wp_enqueue_style('animate-css', $this->plugin_url . 'assets/frontend/css/animate.min.css');
+        wp_enqueue_style('animation-on-scroll', $this->plugin_url . 'assets/frontend/css/animation-on-scroll.css');
+        wp_enqueue_style('chosen-css', $this->plugin_url . 'assets/frontend/css/chosen.min.css');
+        wp_enqueue_style('font-awesome-css', $this->plugin_url . 'assets/frontend/css/font-awesome.min.css');
+        wp_enqueue_style('jquery-growl-css', $this->plugin_url . 'assets/frontend/css/jquery.growl.min.css');
+        wp_enqueue_style('simple-line-icons-css', $this->plugin_url . 'assets/frontend/css/simple-line-icons.css');
+
         
         wp_enqueue_style('style-css', $this->plugin_url . 'assets/frontend/css/style.css', ['bootstrap-css', 'flaticon-css', 'scrollbar-css', 'main-style-css']);
 

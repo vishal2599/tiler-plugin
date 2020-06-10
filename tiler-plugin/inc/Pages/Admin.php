@@ -23,7 +23,7 @@ class Admin extends BaseController
 
         $this->setPages();
 
-        $this->settings->addPages($this->pages)->register();
+        // $this->settings->addPages($this->pages)->register();
     }
 
     public function setPages()
