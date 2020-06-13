@@ -1,6 +1,7 @@
 <?php
 $params = array('posts_per_page' => -1, 'post_type' => 'product');
 $wc_query = new WP_Query($params);
+$plugin_dir = plugin_dir_url(dirname(__FILE__, 1));
 ?>
 <script>
     const galleryImgs = {
@@ -36,7 +37,7 @@ $wc_query = new WP_Query($params);
                             <li class="active" style="width: 120px;height:40px;text-align: center;border-top: 1px solid #ccc;border-left: 1px solid #ccc;border-right: 1px solid #ccc;">
                                 <a href="#tab1default" style="padding-top: 5px !important;" data-toggle="tab">Design</a>
                             </li>
-                            <li style="margin-left:20px;width: 275px;height:40px;text-align: center;border-top: 1px solid #ccc;border-left: 1px solid #ccc;border-right: 1px solid #ccc;">
+                            <li style="margin-left:20px;width: 275px;height:40px;text-align: center;border-top: 1px solid #ccc;border-left: 1px solid #ccc;border-right: 1px solid #ccc;display:none;">
                                 <a href="#tab2default" style="padding-top: 5px !important;" data-toggle="tab">Inspiration Gallery</a>
                             </li>
                         </ul>
@@ -91,12 +92,13 @@ $wc_query = new WP_Query($params);
                                         <p style="margin:0px !important; padding:0px !important">Tile Direction</p>
                                         <!-- <div style="inline-block;float:left;cursor:pointer"> -->
                                         <!-- <span>&#x2195;</span> -->
-                                        <img style="display:inline-block;float:left;cursor:pointer" id="d_vertical" class="orientation-button o-vertical" src="https://whd.nju.mybluehost.me/wayflor-usa/wp-content/uploads/2020/02/button-tiledirection-vertical-off.png" width="30" height="30" />
+                                        
+                                        <img style="display:inline-block;float:left;cursor:pointer" id="d_vertical" class="orientation-button o-vertical" src="<?php echo $plugin_dir; ?>assets/images/button-tiledirection-vertical-off.png" width="30" height="30" />
                                         <!-- <span>Vertical</span> -->
                                         <!-- </div> -->
                                         <!-- <div style="inline-block;float:left;cursor:pointer" class="orientation-button o-horizontal" style="inline-block;float:left;cursor:pointer;margin-left:10px;" class="orientation-button o-horizontal text-center"> -->
                                         <!-- <span>&#x2194;</span> -->
-                                        <img style="margin-left:10px;display:inline-block;float:left;cursor:pointer" id="d_horizontal" class="orientation-button o-horizontal" src="https://whd.nju.mybluehost.me/wayflor-usa/wp-content/uploads/2020/02/button-tiledirection-horiz-off.png" width="30" height="30" />
+                                        <img style="margin-left:10px;display:inline-block;float:left;cursor:pointer" id="d_horizontal" class="orientation-button o-horizontal" src="<?php echo $plugin_dir; ?>assets/images/button-tiledirection-horiz-off.png" width="30" height="30" />
                                         <!-- <span>Horizontal</span> -->
                                         <!-- </div> -->
                                     </div>
@@ -106,7 +108,7 @@ $wc_query = new WP_Query($params);
                                              <span>fill</span>
                                              <span>Vertical</span>
                                          </div> -->
-                                        <img id="fillAll" style="margin-left:10px;display:inline-block;float:left;cursor:pointer" class="orientation-button icon-btn" src="https://whd.nju.mybluehost.me/wayflor-usa/wp-content/uploads/2020/02/button-fill-off.png" width="30" height="30" />
+                                        <img id="fillAll" style="margin-left:10px;display:inline-block;float:left;cursor:pointer" class="orientation-button icon-btn" src="<?php echo $plugin_dir; ?>assets/images/button-fill-off.png" width="30" height="30" />
                                     </div>
                                     <div class="configurator-item" style="margin-left: 25px;top: -25px;position: relative;">
                                         <p style="margin:0px !important; padding:0px !important">Undo</p>
@@ -114,7 +116,7 @@ $wc_query = new WP_Query($params);
                                         <!-- <span>undo</span> -->
                                         <!-- <span>Vertical</span> -->
                                         <!-- </div> -->
-                                        <img id="undo" style="margin-left:10px;display:inline-block;float:left;cursor:pointer" class="orientation-button icon-btn" src="https://whd.nju.mybluehost.me/wayflor-usa/wp-content/uploads/2020/02/button-undo-off.png" width="30" height="30" />
+                                        <img id="undo" style="margin-left:10px;display:inline-block;float:left;cursor:pointer" class="orientation-button icon-btn" src="<?php echo $plugin_dir; ?>assets/images/button-undo-off.png" width="30" height="30" />
                                     </div>
                                     <div class="configurator-item" style="margin-left: 25px;top: -25px;position: relative;">
                                         <p style="margin:0px !important; padding:0px !important">Clear All</p>
@@ -122,7 +124,7 @@ $wc_query = new WP_Query($params);
                                         <!-- <span>clear</span> -->
                                         <!-- <span>Vertical</span> -->
                                         <!-- </div> -->
-                                        <img id="clear" style="margin-left:10px;display:inline-block;float:left;cursor:pointer" class="orientation-button icon-btn" src="https://whd.nju.mybluehost.me/wayflor-usa/wp-content/uploads/2020/02/button-clearall-off.png" width="30" height="30" />
+                                        <img id="clear" style="margin-left:10px;display:inline-block;float:left;cursor:pointer" class="orientation-button icon-btn" src="<?php echo $plugin_dir; ?>assets/images/button-clearall-off.png" width="30" height="30" />
                                     </div>
 
                                 </div>
@@ -160,15 +162,15 @@ $wc_query = new WP_Query($params);
                                         <div class="gallery-img-wrapper">
                                             <div id="hospitality">
                                                 <img class="gallery-img" src="" />
-                                                <img class="gallery-img" src="http://wayflorusa.com/wf2/wp-content/uploads/2020/03/hospitality-overlay-2000.png" />
+                                                <img class="gallery-img" src="<?php echo $plugin_dir; ?>assets/images/hospitality-overlay-2000.png" />
                                             </div>
                                             <div id="workspace">
                                                 <img class="gallery-img" src="" />
-                                                <img class="gallery-img" src="http://wayflorusa.com/wf2/wp-content/uploads/2020/03/workspace-overlay-2000.png" />
+                                                <img class="gallery-img" src="<?php echo $plugin_dir; ?>assets/images/workspace-overlay-2000.png" />
                                             </div>
                                             <div id="publicspace">
                                                 <img class="gallery-img" src="" />
-                                                <img class="gallery-img" src="http://wayflorusa.com/wf2/wp-content/uploads/2020/03/public-overlay-2000.png" />
+                                                <img class="gallery-img" src="<?php echo $plugin_dir; ?>assets/images/public-overlay-2000.png" />
                                             </div>
                                             <div id="myphoto">
                                                 <img class="gallery-img" src="" />

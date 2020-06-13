@@ -14,7 +14,7 @@
 
  // Clear data stored in database
  
- $page = get_page_by_title('Tiler', OBJECT, 'page');
+ $page = get_page_by_title('Design Studio', OBJECT, 'page');
 
  if( !empty($page) && $page != null ){
      wp_delete_post( $page->ID );
