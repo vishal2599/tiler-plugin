@@ -20,7 +20,8 @@ final class Init
             Pages\Admin::class,
             Base\Enqueue::class,
             Base\SettingsLinks::class,
-            Base\CreateShortcode::class
+            Base\WooFunctions::class,
+            Base\CreateShortcode::class,
         ];
     }
 

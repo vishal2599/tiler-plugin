@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * 
+ * Template Name: Design Studio
+ */
 get_header(); ?>
 
 <div class="container">

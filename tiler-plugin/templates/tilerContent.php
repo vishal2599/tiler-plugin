@@ -37,7 +37,7 @@ $plugin_dir = plugin_dir_url(dirname(__FILE__, 1));
                             <li class="active" style="width: 120px;height:40px;text-align: center;border-top: 1px solid #ccc;border-left: 1px solid #ccc;border-right: 1px solid #ccc;">
                                 <a href="#tab1default" style="padding-top: 5px !important;" data-toggle="tab">Design</a>
                             </li>
-                            <li style="margin-left:20px;width: 275px;height:40px;text-align: center;border-top: 1px solid #ccc;border-left: 1px solid #ccc;border-right: 1px solid #ccc;display:none;">
+                            <li style="margin-left:20px;width: 275px;height:40px;text-align: center;border-top: 1px solid #ccc;border-left: 1px solid #ccc;border-right: 1px solid #ccc;">
                                 <a href="#tab2default" style="padding-top: 5px !important;" data-toggle="tab">Inspiration Gallery</a>
                             </li>
                         </ul>
