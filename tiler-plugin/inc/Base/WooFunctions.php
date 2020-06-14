@@ -11,17 +11,8 @@ class WooFunctions extends BaseController
 {
     public function register()
     {
-        if ($this->is_woocommerce_activated()) {
-            add_action('wp_ajax_ql_woocommerce_ajax_add_to_cart', [$this, 'ql_woocommerce_ajax_add_to_cart']);
-            add_action('wp_ajax_nopriv_ql_woocommerce_ajax_add_to_cart', [$this, 'ql_woocommerce_ajax_add_to_cart']);
-        }
-    }
-
-    public function is_woocommerce_activated()
-    {
-        if (class_exists('woocommerce')) {
-            return true;
-        }
+        add_action('wp_ajax_ql_woocommerce_ajax_add_to_cart', [$this, 'ql_woocommerce_ajax_add_to_cart']);
+        add_action('wp_ajax_nopriv_ql_woocommerce_ajax_add_to_cart', [$this, 'ql_woocommerce_ajax_add_to_cart']);
     }
 
     public function ql_woocommerce_ajax_add_to_cart()
