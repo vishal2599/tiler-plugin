@@ -1,37 +1,37 @@
 var $ = jQuery;
 let arrangements = [{
     name: "50 x 50cm Square Monolithic",
-    icon: "https://wayflorusa.com/wf2/wp-content/uploads/2020/02/arrangement-square-monolithic.png",
+    icon: "/wf4/wp-content/plugins/tiler-plugin/assets/images/arrangement-square-monolithic.png",
     dataPattern: "square"
 },
 {
     name: "50 x 50cm Square Vertical Ashlar",
-    icon: "https://wayflorusa.com/wf2/wp-content/uploads/2020/02/arrangement-square-vert-ashlar.png",
+    icon: "/wf4/wp-content/plugins/tiler-plugin/assets/images/arrangement-square-vert-ashlar.png",
     dataPattern: "v-ashlar"
 },
 {
     name: "50 x 50cm Square Horizontal Ashlar",
-    icon: "https://wayflorusa.com/wf2/wp-content/uploads/2020/02/arrange-square-horiz-ashlar.png",
+    icon: "/wf4/wp-content/plugins/tiler-plugin/assets/images/arrange-square-horiz-ashlar.png",
     dataPattern: "h-ashlar"
 },
 {
     name: "25 x 75cm Plank Monolithic",
-    icon: "https://wayflorusa.com/wf2/wp-content/uploads/2020/02/arrangement-plank-monolithic.png",
+    icon: "/wf4/wp-content/plugins/tiler-plugin/assets/images/arrangement-plank-monolithic.png",
     dataPattern: "plank-monolithic"
 },
 {
     name: "25 x 75cm Plank Ashlar",
-    icon: "https://wayflorusa.com/wf2/wp-content/uploads/2020/02/arrangement-plank-ashlar.png",
+    icon: "/wf4/wp-content/plugins/tiler-plugin/assets/images/arrangement-plank-ashlar.png",
     dataPattern: "plank-ashlar"
 },
 {
     name: "25 x 75cm Plank Herringbone",
-    icon: "https://wayflorusa.com/wf2/wp-content/uploads/2020/02/arrangement-plank-herringbone.png",
+    icon: "/wf4/wp-content/plugins/tiler-plugin/assets/images/arrangement-plank-herringbone.png",
     dataPattern: "herringbone"
 }
 ];
 function setArrangement(id) {
-    $('#arrangementBtn').html(`<img src="${arrangements[id].icon}" height="40" width="40" /><span>${arrangements[id].name.substr(10)}</span>`);
+    $('#arrangementBtn').html(`<img crossorigin="anonymous" src="${arrangements[id].icon}" height="40" width="40" /><span>${arrangements[id].name.substr(10)}</span>`);
 }
 jQuery(document).ready(function () {
 
@@ -51,11 +51,12 @@ jQuery(document).ready(function () {
             // ... or get as Data URI
             callback(canvas.toDataURL('image/png'));
         };
+        image.setAttribute('crossorigin', 'anonymous');
 
         image.src = url;
     }
 
-    getDataUri("https://whd.nju.mybluehost.me/wayflor-usa/wp-content/uploads/2019/11/Wayflor-Logo-RGB-200.png", function (dataUri) {
+    getDataUri("https://wayflor-usa.imgix.net/2020/03/Wayflor-Logo%402x.png?auto=compress%2Cformat&ixlib=php-1.2.1&s=c72958a3757d8fe7c4d7fe05ca037aac", function (dataUri) {
         logo = dataUri;
     });
 
@@ -123,10 +124,10 @@ jQuery(document).ready(function () {
 
     let arrangementsHTML = "";
 
-    $('#arrangementBtn').html(`<img src="${arrangements[0].icon}" height="40" width="40" /><span>${arrangements[0].name.substr(10)}</span>`);
+    $('#arrangementBtn').html(`<img crossorigin="anonymous" src="${arrangements[0].icon}" height="40" width="40" /><span>${arrangements[0].name.substr(10)}</span>`);
 
     arrangements.map(({ name, icon, dataPattern }, index) => {
-        arrangementsHTML += `<li style="cursor:pointer" onclick="setArrangement(${index})"><a class="product-pattern" data-pattern="${dataPattern}"><img src="${icon}" height="40" width="40" /><span>${name}</span></a></li>`;
+        arrangementsHTML += `<li style="cursor:pointer" onclick="setArrangement(${index})"><a class="product-pattern" data-pattern="${dataPattern}"><img crossorigin="anonymous" src="${icon}" height="40" width="40" /><span>${name}</span></a></li>`;
     });
 
     $('#arrangement').html(arrangementsHTML);
@@ -188,7 +189,7 @@ jQuery(document).ready(function () {
 
         $('#tile-list').html(template);
         jQuery(".single-tile-image").click(function (ret) {
-            jQuery('#productBtn').html(`<img src="${ret.target.src}"/><span>${ret.target.dataset.name}</span>`);
+            jQuery('#productBtn').html(`<img crossorigin="anonymous" src="${ret.target.src}"/><span>${ret.target.dataset.name}</span>`);
             var vertCtx = verticalTempCanvas.getContext("2d");
             var horiCtx = horizontalTempCanvas.getContext("2d");
 
@@ -222,6 +223,7 @@ jQuery(document).ready(function () {
 
             var vertImage = new Image();
             vertImage.onload = startVert;
+            vertImage.setAttribute('crossorigin', 'anonymous');
 
             vertImage.src = currentTileImageSource;
 
@@ -241,6 +243,7 @@ jQuery(document).ready(function () {
             // since images draw from top-left offset the draw by 1/2 width & height
             var horizontalImage = new Image();
             horizontalImage.onload = startHorizontal;
+            horizontalImage.setAttribute('crossorigin', 'anonymous');
             horizontalImage.src = currentTileImageSource;
 
             function startHorizontal() {
@@ -255,7 +258,7 @@ jQuery(document).ready(function () {
 
 
 
-    $('#productBtn').html(`<img src="${$('#pseudoTileList img')[0].src}"/><span>${$('#pseudoTileList img')[0].dataset.name}</span>`);
+    $('#productBtn').html(`<img crossorigin="anonymous" src="${$('#pseudoTileList img')[0].src}"/><span>${$('#pseudoTileList img')[0].dataset.name}</span>`);
 
     function setupGalleryImage(key) {
         let canvas = document.getElementById('others-div').getElementsByClassName('lower-canvas')[0];

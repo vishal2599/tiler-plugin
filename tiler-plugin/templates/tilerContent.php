@@ -63,6 +63,7 @@ $plugin_dir = plugin_dir_url(dirname(__FILE__, 1));
                                                     $wc_query->the_post();
                                                     /* grab the url for the full size featured image */
                                                     $product = wc_get_product(get_the_ID());
+                                                    
                                                     //$pa_color = array_values(wc_get_product_terms($product->id, 'pa_color', array('fields' => 'names')));
                                                     $prodColors = implode(", ", array_values(wc_get_product_terms($product->id, 'pa_color', array('fields' => 'names'))));
 											
@@ -73,7 +74,10 @@ $plugin_dir = plugin_dir_url(dirname(__FILE__, 1));
 											$prodWeight = implode(", ", array_values(wc_get_product_terms($product->id, 'pa_weight', array('fields' => 'names'))));
 
                                                     // $featured_img_url = get_the_post_thumbnail_url(get_the_ID(), 'full');
-                                                    $featured_img_url = get_field('carpet_image', get_the_ID());
+                                                    // $featured_img_url = get_field('carpet_image', get_the_ID());
+
+                                                    $featured_img_url = wp_get_attachment_image_src( get_post_thumbnail_id( $product->id ), 'single-post-thumbnail' )[0];
+
                                                     //$colorAttr = $product->get_attribute( 'pa_color' );
 
 
@@ -201,8 +205,8 @@ $plugin_dir = plugin_dir_url(dirname(__FILE__, 1));
                             <div style="display:inline-block;float:left;width: 200px;max-height: 200px;overflow: hidden;">
                                 <span style="display:block">{{productName}}</span>
                                 <span style="display:block">SKU: {{productSKU}}</span>
-                                <a href="{{productURL}}"><img src="https://whd.nju.mybluehost.me/wayflor-usa/wp-content/uploads/2020/03/icon-info.png" height="30" width="30"></a>
-                                <img style="cursor:pointer" class="single_add_to_cart_button" rel="nofollow" data-product_id="{{productID}}" data-product_sku="{{productSKU}}" src="http://wayflorusa.com/wf2/wp-content/uploads/2020/02/icon-addtocart.png" height="30" width="30" />
+                                <a href="{{productURL}}"><img src="<?php echo $plugin_dir; ?>assets/images/icon-info.png" height="30" width="30"></a>
+                                <img style="cursor:pointer" class="single_add_to_cart_button" rel="nofollow" data-product_id="{{productID}}" data-product_sku="{{productSKU}}" src="<?php echo $plugin_dir; ?>assets/images/icon-addtocart.png" height="30" width="30" />
                             </div>
                         </div>
                     {{/each}}
