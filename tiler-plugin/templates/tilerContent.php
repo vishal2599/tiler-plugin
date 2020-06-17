@@ -3,6 +3,7 @@ $params = array('posts_per_page' => -1, 'post_type' => 'product');
 $wc_query = new WP_Query($params);
 $plugin_dir = plugin_dir_url(dirname(__FILE__, 1));
 ?>
+<input type="hidden" id="plugindir" name="plugindir" value="<?= $plugin_dir ?>">
 <script>
     const galleryImgs = {
         hospitality: {
@@ -63,20 +64,20 @@ $plugin_dir = plugin_dir_url(dirname(__FILE__, 1));
                                                     $wc_query->the_post();
                                                     /* grab the url for the full size featured image */
                                                     $product = wc_get_product(get_the_ID());
-                                                    
+
                                                     //$pa_color = array_values(wc_get_product_terms($product->id, 'pa_color', array('fields' => 'names')));
                                                     $prodColors = implode(", ", array_values(wc_get_product_terms($product->id, 'pa_color', array('fields' => 'names'))));
-											
-											$prodSize = implode(", ", array_values(wc_get_product_terms($product->id, 'pa_size', array('fields' => 'names'))));
-											
-											$prodThickness = implode(", ", array_values(wc_get_product_terms($product->id, 'pa_thickness', array('fields' => 'names'))));
-											
-											$prodWeight = implode(", ", array_values(wc_get_product_terms($product->id, 'pa_weight', array('fields' => 'names'))));
+
+                                                    $prodSize = implode(", ", array_values(wc_get_product_terms($product->id, 'pa_size', array('fields' => 'names'))));
+
+                                                    $prodThickness = implode(", ", array_values(wc_get_product_terms($product->id, 'pa_thickness', array('fields' => 'names'))));
+
+                                                    $prodWeight = implode(", ", array_values(wc_get_product_terms($product->id, 'pa_weight', array('fields' => 'names'))));
 
                                                     // $featured_img_url = get_the_post_thumbnail_url(get_the_ID(), 'full');
                                                     // $featured_img_url = get_field('carpet_image', get_the_ID());
 
-                                                    $featured_img_url = wp_get_attachment_image_src( get_post_thumbnail_id( $product->id ), 'single-post-thumbnail' )[0];
+                                                    $featured_img_url = wp_get_attachment_image_src(get_post_thumbnail_id($product->id), 'single-post-thumbnail')[0];
 
                                                     //$colorAttr = $product->get_attribute( 'pa_color' );
 
@@ -96,7 +97,7 @@ $plugin_dir = plugin_dir_url(dirname(__FILE__, 1));
                                         <p style="margin:0px !important; padding:0px !important">Tile Direction</p>
                                         <!-- <div style="inline-block;float:left;cursor:pointer"> -->
                                         <!-- <span>&#x2195;</span> -->
-                                        
+
                                         <img style="display:inline-block;float:left;cursor:pointer" id="d_vertical" class="orientation-button o-vertical" src="<?php echo $plugin_dir; ?>assets/images/button-tiledirection-vertical-off.png" width="30" height="30" />
                                         <!-- <span>Vertical</span> -->
                                         <!-- </div> -->
