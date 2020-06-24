@@ -27,7 +27,48 @@ $plugin_dir = plugin_dir_url(dirname(__FILE__, 1));
         }
     };
 </script>
+<style>
+    .panel-default,
+    .panel-default>.panel-heading {
+        background-color: transparent;
+        border: none;
+        padding: 0;
+    }
 
+    .panel-body {
+        border: 1px solid;
+    }
+
+    .page-content ul li {
+        margin: 0;
+        border-left: 1px solid;
+        border-right: 1px solid;
+        border-top: 1px solid;
+        background-color: #efefef;
+    }
+
+    .page-content ul li.active {
+        border-bottom: 1px #fff;
+        margin-bottom: -2px;
+        background-color: #fff;
+    }
+
+    .page-content ul li:first-child {
+        margin-right: -1px;
+    }
+
+    .nav-tabs>li>a {
+        padding: 8px 15px;
+    }
+
+    button#printPDF {
+        background-color: #d23f38;
+    }
+
+    p#printPDFLabel {
+        font-size: 11px;
+    }
+</style>
 <div id="primary" class="content-area">
     <div class="container-fluid">
         <div class="row">
@@ -35,11 +76,11 @@ $plugin_dir = plugin_dir_url(dirname(__FILE__, 1));
                 <div class="panel with-nav-tabs panel-default">
                     <div class="panel-heading" style="padding-bottom: 0px;border-bottom: 0px;">
                         <ul class="nav nav-tabs" style="display: flex;justify-content: start;" id="tabList">
-                            <li class="active" style="width: 120px;height:40px;text-align: center;border-top: 1px solid #ccc;border-left: 1px solid #ccc;border-right: 1px solid #ccc;">
-                                <a href="#tab1default" style="padding-top: 5px !important;" data-toggle="tab">Design</a>
+                            <li class="active">
+                                <a href="#tab1default" data-toggle="tab">Design</a>
                             </li>
-                            <li style="margin-left:20px;width: 275px;height:40px;text-align: center;border-top: 1px solid #ccc;border-left: 1px solid #ccc;border-right: 1px solid #ccc;">
-                                <a href="#tab2default" style="padding-top: 5px !important;" data-toggle="tab">Inspiration Gallery</a>
+                            <li>
+                                <a href="#tab2default" data-toggle="tab">Inspiration Gallery</a>
                             </li>
                         </ul>
                     </div>
@@ -149,7 +190,7 @@ $plugin_dir = plugin_dir_url(dirname(__FILE__, 1));
                             </div> <!-- ends what-->
                             <div class="tab-pane fade" id="tab2default">
                                 <div class="row p-2" style="margin-left:20px;">
-                                    <div class="configurator-item">
+                                    <div class="configurator-item active">
                                         <button class="" id="hospitalityBtn" type="button">HOSPITALITY</button>
                                     </div>
                                     <div class="configurator-item">
@@ -188,8 +229,8 @@ $plugin_dir = plugin_dir_url(dirname(__FILE__, 1));
                     </div>
                 </div>
             </div> <!-- ends col-10?-->
-            <div class="col-md-3" style="margin-top: 50px; max-height:800px; overflow-y:scroll;">
-                <p style="margin:0px !important; padding:0px !important">Product Selected</p>
+            <div class="col-md-3" style="margin-top: 50px; max-height:800px; overflow-y:auto;">
+                <p style="margin:0px !important; padding:0px !important;border-bottom: 1px solid;">Product Selected</p>
                 <div id="selected-product-list">
                 </div>
 
@@ -201,13 +242,13 @@ $plugin_dir = plugin_dir_url(dirname(__FILE__, 1));
                 <script id="handlebars-demo" type="text/x-handlebars-template">
                     {{#each tilesFinal}}
                         <div style="display: flex;justify-content: space-around; margin-top:15px;">
-                            <div style="display:inline-block;float:left;height:75px;width:75px;background-image:url('{{src}}')">
+                            <div style="display:inline-block;float:left;height:75px;width:75px;background-image:url('{{src}}'); background-size: 100%;">
                             </div>
-                            <div style="display:inline-block;float:left;width: 200px;max-height: 200px;overflow: hidden;">
-                                <span style="display:block">{{productName}}</span>
-                                <span style="display:block">SKU: {{productSKU}}</span>
-                                <a href="{{productURL}}"><img src="<?php echo $plugin_dir; ?>assets/images/icon-info.png" height="30" width="30"></a>
-                                <img style="cursor:pointer" class="single_add_to_cart_button" rel="nofollow" data-product_id="{{productID}}" data-product_sku="{{productSKU}}" src="<?php echo $plugin_dir; ?>assets/images/icon-addtocart.png" height="30" width="30" />
+                            <div style="display:inline-block;float:left;width: 200px;max-height: 200px;overflow: hidden;padding-left: 10px;">
+                                <span style="display:block;line-height: 15px;margin-bottom: 8px;">{{productName}}</span>
+                                <span style="display:block;font-size: 13px;line-height: 14px;margin-bottom: 5px;">{{productSKU}}</span>
+                                <a href="{{productURL}}"><img src="<?php echo $plugin_dir; ?>assets/images/icon-info.png" height="20" width="20"></a>
+                                <img style="cursor:pointer" class="single_add_to_cart_button" rel="nofollow" data-product_id="{{productID}}" data-product_sku="{{productSKU}}" src="<?php echo $plugin_dir; ?>assets/images/icon-addtocart.png" height="20" width="20" />
                             </div>
                         </div>
                     {{/each}}
