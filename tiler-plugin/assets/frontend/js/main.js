@@ -36,8 +36,7 @@ jQuery(function() {
 
 
 
-    // console.log('Welcome');
-    let logo = null;
+    let logo = logo1 = null;
 
     function getDataUri(url, callback) {
         let image = new Image();
@@ -58,9 +57,26 @@ jQuery(function() {
         image.src = url;
     }
 
-    // getDataUri("https://wayflor-usa.imgix.net/2020/03/Wayflor-Logo%402x.png?auto=compress%2Cformat&ixlib=php-1.2.1&s=c72958a3757d8fe7c4d7fe05ca037aac", function(dataUri) {
-    //     logo = dataUri;
-    // });
+    getDataUri(pluginDir + "assets/images/Wayflor-Logo.jpg", function(dataUri) {
+        logo = dataUri;
+    });
+    getDataUri(pluginDir + "assets/images/Wayflor-FeatureIcons.jpg", function(dataUri) {
+        logo1 = dataUri;
+    });
+
+    function getDataUrl(fileSrc) {
+        // Create canvas
+
+        var myCanvas = document.getElementById('procreate');
+        var ctx = myCanvas.getContext('2d');
+        var img = new Image();
+        img.onload = function() {
+            ctx.drawImage(img, 0, 0);
+            console.log(myCanvas.toDataURL());
+            return myCanvas.toDataURL();
+        };
+        img.src = fileSrc;
+    }
 
     function getTilesDetails(arr) {
         if (arr.lentgh === 0) {
@@ -73,10 +89,10 @@ jQuery(function() {
             columns: [{
                     width: 30,
                     height: 90,
-                    image: el.src
+                    image: el.src1
                 },
-                ['STYLE', 'SHAPE', 'CODE', 'COLOR', 'SIZE', 'THICKNESS', 'WEIGHT', 'AVAILIBILITY'],
-                ['STYLE', 'SHAPE', el.productSKU, el.productColor, el.productSize, el.productThickness, el.productWeight, 'AVAILIBILITY']
+                ['PRODUCT', 'CODE', 'COLOR', 'SIZE', 'THICKNESS', 'WEIGHT', 'AVAILIBILITY'],
+                [': ' + el.productName, ': ' + el.productSKU, ': ' + el.productColor, ': ' + el.productColor, ': ' + el.productThickness, ': ' + el.productWeight, ': AVAILIBILE']
             ]
         }, '\n']);
 
@@ -99,11 +115,18 @@ jQuery(function() {
                         '\n\n\n\n',
                         getTilesDetails(window.tilesFinal)
                     ],
-                    {
-                        width: 300,
-                        height: 300,
-                        image: generatedImage
-                    }
+                    [{
+                            width: 250,
+                            height: 250,
+                            image: generatedImage
+                        },
+                        '\n\n',
+                        {
+                            width: 250,
+                            height: 45,
+                            image: logo1
+                        }
+                    ]
                 ]
             }],
             styles: {
@@ -113,9 +136,10 @@ jQuery(function() {
                 }
             },
             defaultStyle: {
-                columnGap: 20
+                columnGap: 10
             }
         };
+        console.log(window.tilesFinal);
         pdfMake.createPdf(dd).download();
     };
 
@@ -196,8 +220,6 @@ jQuery(function() {
             var vertCtx = verticalTempCanvas.getContext("2d");
             var horiCtx = horizontalTempCanvas.getContext("2d");
 
-            // console.log('here');
-
             if (currentTileImageSource !== "") {
                 horiCtx.rotate(-Math.PI / 2);
                 horiCtx.translate(-verticalTempCanvas.width / 2, -verticalTempCanvas.height / 2);
@@ -258,7 +280,7 @@ jQuery(function() {
 
 
 
-    $('#productBtn').html(`<img crossorigin="anonymous" src="${$('#pseudoTileList img')[0].src}"/><span>${$('#pseudoTileList img')[0].dataset.name}</span>`);
+    // $('#productBtn').html(`<img crossorigin="anonymous" src="${$('#pseudoTileList img')[0].src}"/><span>${$('#pseudoTileList img')[0].dataset.name}</span>`);
 
     function setupGalleryImage(key) {
         let canvas = document.getElementById('others-div').getElementsByClassName('lower-canvas')[0];
@@ -318,7 +340,6 @@ jQuery(function() {
         if (width == 37.5 || width == 112.5) {
             width += 2;
         }
-        console.log(width);
         var ctx;
         if (currentAngle == 0) {
             ctx = verticalTempCanvas.getContext("2d");
@@ -427,7 +448,6 @@ jQuery(function() {
     });
 
     function handleGridSelector(selectedProduct, selectedTile = null) {
-        // console.log(selectedProduct);
         rectArray = [];
         switch (selectedProduct) {
             case "square":
@@ -672,7 +692,6 @@ jQuery(function() {
 
     // HORIZONTAL ASHLAR
     function createHorizontalSquareAshlar(tileImage = null) {
-        // console.log('here');
         const grid = 50 * 1.5;
         // canvas.clear();
         document.getElementById("others-div").style.display = "block";
@@ -733,7 +752,6 @@ jQuery(function() {
     }
 
     function handleAddTile(target) {
-        console.log(target);
         const { left, top, height, width } = target;
         var tempLeft = 0;
         var tempTop = 0;
@@ -835,14 +853,13 @@ jQuery(function() {
             obj[tilesTemp[i]['product']] = tilesTemp[i];
 
         tilesFinal = new Array();
-        console.log(obj);
         for (var key in obj) {
-            obj[key].src = $('img[data-product-id="' + obj[key].productID + '"]').attr('src')
-            console.log(obj[key]);
+            getDataUri($('img[data-product-id="' + obj[key].productID + '"]').attr('src'), function(dataUri) {
+                obj[key].src1 = dataUri;
+            });
+            obj[key].src = $('img[data-product-id="' + obj[key].productID + '"]').attr('src');
             tilesFinal.push(obj[key]);
         }
-
-        console.log(tilesFinal);
 
         // var tilesFinal = _.uniqBy(tilesTemp, "product");
         // var tilesFinal = _.uniqBy(tilesTemp, "product");
@@ -970,7 +987,6 @@ jQuery(function() {
     // // PLANK ASHLAR
     function createPlankAshlar(tileImage = null) {
         const grid = 25 * 1.5;
-        console.log('here');
         for (var i = 0; i <= 600 / grid; i++) {
             for (var j = 0; j <= 600 / grid; j++) {
                 if (i % 2 == 0) {
