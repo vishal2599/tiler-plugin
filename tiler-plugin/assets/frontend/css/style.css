@@ -8,17 +8,15 @@
     filter: brightness(.5) invert(1.5);
 }
 
-.tiler-area .p-2 {
-    padding: 20px;
-}
-
 .tiler-area .gallery-img-wrapper {
     position: relative;
-    width: 600px;
+    width: 100%;
     height: 600px;
     border: 1px solid #ccc;
     perspective: 300px;
     overflow: hidden;
+    margin-top: 15px;
+    min-width: 600px;
 }
 
 .tiler-area .gallery-img {
@@ -183,8 +181,8 @@
 }
 
 .tiler-area .orientation-button {
-    width: 60px;
-    height: 60px;
+    width: 35px;
+    height: 35px;
     border-radius: 5px;
     border: 1px solid #ccc;
 }
@@ -251,8 +249,9 @@
     color: #000;
     border: 1px solid #868686;
     text-align: left;
-    height: 60px;
+    height: 40px;
     padding: 0 10px;
+    font-size: 12px;
 }
 
 .tiler-area .dropdown.configurator-item button span {
@@ -264,9 +263,7 @@
 }
 
 .tiler-area .right-control .configurator-item {
-    display: block;
-    margin-bottom: 10px;
-    margin-left: 20px;
+    display: inline-block;
     cursor: pointer;
 }
 
@@ -313,8 +310,14 @@
 }
 
 .tiler-area .canvas-container {
-    border-right: 2px solid #000;
-    border-bottom: 2px solid #000;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+}
+
+.canvas-container,
+.canvas-container * {
+    width: 100%!important;
+    min-width: 600px!important;
 }
 
 .tiler-area .dropdown.configurator-item button:after {
@@ -326,5 +329,47 @@
     border-top: 8px solid #444;
     position: absolute;
     right: 10px;
-    bottom: 27px;
+    bottom: 15px;
+}
+
+.tiler-area .set-angle {
+    margin-left: 0px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.tiler-area .set-angle.active {
+    filter: brightness(0.5) invert(1);
+}
+
+.configurator-item p {
+    margin: 0;
+}
+
+.col-sm-3.right-control {
+    padding-top: 25px;
+    display: inline-block;
+}
+
+.configurator-item.direction:after {
+    content: '';
+    height: 30px;
+    width: 1px;
+    background: #888;
+    right: 10px;
+    position: absolute;
+    bottom: 3px;
+}
+
+button#arrangementBtn img {
+    max-height: 30px;
+    width: auto;
+}
+
+a.product-pattern {
+    cursor: pointer;
+}
+
+.tiler-area .panel-heading {
+    padding-left: 15px!important;
 }
