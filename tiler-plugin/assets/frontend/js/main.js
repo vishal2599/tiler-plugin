@@ -1,5 +1,10 @@
 let arrangements = [];
+var globalWidth = 600;
 jQuery(function() {
+
+    globalWidth = (jQuery('.tiler-area .col-sm-12.relative').width() > 600) ? jQuery('.tiler-area .col-sm-12.relative').width() : 600;
+    console.log(globalWidth);
+
     var $ = jQuery;
     var pluginDir = $('input[name="plugindir"]').val();
     arrangements = [{
@@ -82,19 +87,25 @@ jQuery(function() {
         if (arr.lentgh === 0) {
             return "";
         }
+        var hgt = 80,
+            width = 30,
+            pattern = jQuery('.product-pattern.selected')[0].dataset.pattern;
+        if (pattern == "square" || pattern == "v-ashlar" || pattern == "h-ashlar") {
+            hgt = width = 80;
+        }
 
         let result = arr.map(el => [{
             alignments: ['right'],
             style: 'label',
             columns: [{
-                    width: 30,
-                    height: 90,
-                    image: el.src1
+                    width: width,
+                    height: hgt,
+                    image: el.src
                 },
                 ['PRODUCT', 'CODE', 'COLOR', 'SIZE', 'THICKNESS', 'WEIGHT', 'AVAILIBILITY'],
-                [': ' + el.productName, ': ' + el.productSKU, ': ' + el.productColor, ': ' + el.productColor, ': ' + el.productThickness, ': ' + el.productWeight, ': AVAILIBILE']
+                [': ' + el.productName, ': ' + el.productSKU, ': ' + el.productColor, ': ' + el.productSize, ': ' + el.productThickness, ': ' + el.productWeight, ': AVAILIBILE']
             ]
-        }, '\n']);
+        }, '______________________________________________\n\n\n']);
 
         return result;
     }
@@ -154,7 +165,10 @@ jQuery(function() {
     $('#arrangementBtn').html(`<img crossorigin="anonymous" src="${arrangements[0].icon}" height="40" width="40" /><span>${arrangements[0].name.substr(10)}</span>`);
 
     arrangements.map(({ name, icon, dataPattern }, index) => {
-        arrangementsHTML += `<li style="cursor:pointer" onclick="setArrangement(${index})"><a class="product-pattern" data-pattern="${dataPattern}"><img crossorigin="anonymous" src="${icon}" height="40" width="40" /><span>${name}</span></a></li>`;
+        var selected = '';
+        if (index == 0)
+            selected = 'selected';
+        arrangementsHTML += `<li><a class="product-pattern ${selected}"  data-id="${index}" data-pattern="${dataPattern}"><img crossorigin="anonymous" src="${icon}" height="40" width="40" /><span>${name}</span></a></li>`;
     });
 
     $('#arrangement').html(arrangementsHTML);
@@ -189,27 +203,27 @@ jQuery(function() {
 
         if (productType === "square") {
             template += '<li class="tile-item">' +
-                '<span class="tile-category">Twill</span>' +
+                '<span class="tile-category">Twill Square</span>' +
                 '<span class="tile-images">' + twillProducts.map(product => getHTML(product, true)).join('') + '</span>' +
                 '</li>';
 
             template += '<li class="tile-item">' +
-                '<span class="tile-category">Shadowcrete</span>' +
+                '<span class="tile-category">Shadowcrete Square</span>' +
                 '<span class="tile-images">' + shadowcreteProducts.map(product => getHTML(product, true)).join('') + '</span>' +
                 '</li>';
 
             template += '<li class="tile-item">' +
-                '<span class="tile-category">Marbleridge</span>' +
+                '<span class="tile-category">Marbleridge Square</span>' +
                 '<span class="tile-images">' + marbleridgeProducts.map(product => getHTML(product, true)).join('') + '</span>' +
                 '</li>';
         } else {
             template += '<li class="tile-item">' +
-                '<span class="tile-category">Twill</span>' +
+                '<span class="tile-category">Twill Plank</span>' +
                 '<span class="tile-images">' + twillProducts.map(product => getHTML(product, true)).join('') + '</span>' +
                 '</li>';
 
             template += '<li class="tile-item">' +
-                '<span class="tile-category">Mystic</span>' +
+                '<span class="tile-category">Mystic Plank</span>' +
                 '<span class="tile-images">' + mysticProducts.map(product => getHTML(product, true)).join('') + '</span>' +
                 '</li>';
         }
@@ -283,6 +297,7 @@ jQuery(function() {
     // $('#productBtn').html(`<img crossorigin="anonymous" src="${$('#pseudoTileList img')[0].src}"/><span>${$('#pseudoTileList img')[0].dataset.name}</span>`);
 
     function setupGalleryImage(key) {
+        // jQuery('.tiler-area .gallery-img-wrapper').height(jQuery('.tiler-area .gallery-img-wrapper').outerWidth(true));
         let canvas = document.getElementById('others-div').getElementsByClassName('lower-canvas')[0];
         let setupObj = galleryImgs[key];
 
@@ -365,32 +380,22 @@ jQuery(function() {
 
     jQuery(".product-pattern").on("click", function(event) {
         canvas.clear();
+        jQuery(".product-pattern").removeClass('selected');
+        jQuery(this).addClass('selected');
+        var id = jQuery(this).data('id');
+        $('#arrangementBtn').html(`<img crossorigin="anonymous" src="${arrangements[id].icon}" height="40" width="40" /><span>${arrangements[id].name.substr(10)}</span>`);
+        $('#productBtn').html(`Select`);
         rectArray = [];
+        currentTileImageSource = null;
         selectedProduct = event.currentTarget.dataset.pattern;
         handleGridSelector(event.currentTarget.dataset.pattern);
     });
 
-    jQuery("#d_horizontal").on("click", function(event) {
-        currentAngle = 90;
-        if (this.style.filter === "none") {
-            this.style.filter = "brightness(.5) invert(1.5)";
-        } else {
-            this.style.filter = "none";
-        }
-        jQuery("#d_vertical")[0].style.filter = "none";
+    jQuery('.set-angle').on('click', function() {
+        currentAngle = $(this).data('angle');
+        jQuery(".set-angle").removeClass('active');
+        jQuery(this).addClass('active');
     });
-
-    jQuery("#d_vertical").on("click", function(event) {
-        currentAngle = 0;
-        if (this.style.filter === "none") {
-            this.style.filter = "brightness(.5) invert(1.5)";
-        } else {
-            this.style.filter = "none";
-        }
-        jQuery("#d_horizontal")[0].style.filter = "none";
-    });
-
-
 
     jQuery("#fillAll").on("click", function(ret) {
         handleGridSelector(selectedProduct, currentTileImageSource, true);
@@ -480,9 +485,10 @@ jQuery(function() {
     }
 
     function createHerringbone(tileImage = null) {
+
         canvas.clear();
-        const grid = 25 * 1.5;
-        let canvasDiagonal = Math.sqrt((600 * 600) + (600 * 600));
+        const grid = 30 * 1;
+        let canvasDiagonal = Math.sqrt((globalWidth * globalWidth) + (globalWidth * globalWidth));
         let tileDiagonal = Math.sqrt((grid * grid) + (grid * grid));
         let tileHeight = grid * 3;
         for (let i = 0; i < canvasDiagonal / tileDiagonal; i++) {
@@ -493,8 +499,8 @@ jQuery(function() {
                 selectable: false,
                 top: i * grid,
                 left: i * grid,
-                stroke: 2,
-                opacity: 1,
+                stroke: 0.5,
+                opacity: 0.2,
                 fill: "rgba(0,0,0,0)"
             });
             rectArray.push(rect1);
@@ -509,8 +515,8 @@ jQuery(function() {
                 selectable: false,
                 top: (i * grid) + grid,
                 left: i * grid,
-                stroke: 2,
-                opacity: 1,
+                stroke: 0.5,
+                opacity: 0.2,
                 fill: "rgba(0,0,0,0)"
             });
             rectArray.push(rect2);
@@ -527,8 +533,8 @@ jQuery(function() {
                     selectable: false,
                     left: (grid * i) - ((tileHeight - grid) * j),
                     top: (grid * i) + ((grid + tileHeight) * j),
-                    stroke: 2,
-                    opacity: 1,
+                    stroke: 0.5,
+                    opacity: 0.2,
                     fill: "rgba(0,0,0,0)"
                 });
                 rectArray.push(rect1);
@@ -543,8 +549,8 @@ jQuery(function() {
                     selectable: false,
                     left: (grid * i) - ((tileHeight - grid) * j),
                     top: (grid * i) + ((grid + tileHeight) * j) + grid,
-                    stroke: 2,
-                    opacity: 1,
+                    stroke: 0.5,
+                    opacity: 0.2,
                     fill: "rgba(0,0,0,0)"
                 });
                 rectArray.push(rect2);
@@ -559,8 +565,8 @@ jQuery(function() {
                     selectable: false,
                     left: (grid * i) + ((tileHeight - grid) * j),
                     top: (grid * i) - ((grid + tileHeight) * j),
-                    stroke: 2,
-                    opacity: 1,
+                    stroke: 0.5,
+                    opacity: 0.2,
                     fill: "rgba(0,0,0,0)"
                 });
                 rectArray.push(rect3);
@@ -575,8 +581,8 @@ jQuery(function() {
                     selectable: false,
                     left: (grid * i) + ((tileHeight - grid) * j),
                     top: (grid * i) - ((grid + tileHeight) * j) + grid,
-                    stroke: 2,
-                    opacity: 1,
+                    stroke: 0.5,
+                    opacity: 0.2,
                     fill: "rgba(0,0,0,0)"
                 });
                 rectArray.push(rect4);
@@ -595,18 +601,18 @@ jQuery(function() {
 
     // Create square monolithic
     function createSquareMonolithic(tileImage = null) {
-        const grid = 50 * 1.5;
+        const grid = 50 * 1;
 
-        for (var i = 0; i <= 600 / grid; i++) {
-            for (var j = 0; j <= 600 / grid; j++) {
+        for (var i = 0; i <= globalWidth / grid; i++) {
+            for (var j = 0; j <= globalWidth / grid; j++) {
                 if (j % 2 == 0) {
                     var rect = new fabric.Rect({
                         width: grid,
                         height: grid,
                         top: j * grid,
                         left: i * grid,
-                        stroke: 2,
-                        opacity: 1,
+                        stroke: 1,
+                        opacity: 0.2,
                         fill: "rgba(0,0,0,0)",
                         hasControls: false,
                         selectable: false
@@ -621,9 +627,9 @@ jQuery(function() {
                         width: grid,
                         height: grid,
                         top: j * grid,
-                        stroke: 2,
+                        stroke: 1,
                         left: i * grid,
-                        opacity: 1,
+                        opacity: 0.2,
                         fill: "rgba(0,0,0,0)",
                         hasControls: false,
                         selectable: false
@@ -644,9 +650,9 @@ jQuery(function() {
 
     // PLANK MONOLITHIC
     function createPlankMonolithic(tileImage) {
-        const grid = 25 * 1.5;
-        for (var i = 0; i <= 600 / grid; i++) {
-            for (var j = 0; j <= 600 / grid; j++) {
+        const grid = 25 * 1;
+        for (var i = 0; i <= globalWidth / grid; i++) {
+            for (var j = 0; j <= globalWidth / grid; j++) {
                 if (j % 2 == 0) {
                     var rect = new fabric.Rect({
                         width: grid,
@@ -654,7 +660,7 @@ jQuery(function() {
                         top: j * (grid * 3),
                         left: i * grid,
                         stroke: 1,
-                        opacity: 1,
+                        opacity: 0.2,
                         fill: "rgba(0,0,0,0)",
                         hasControls: false,
                         selectable: false
@@ -671,7 +677,7 @@ jQuery(function() {
                         top: j * (grid * 3),
                         stroke: 1,
                         left: i * grid,
-                        opacity: 1,
+                        opacity: 0.2,
                         fill: "rgba(0,0,0,0)",
                         hasControls: false,
                         selectable: false
@@ -695,8 +701,8 @@ jQuery(function() {
         const grid = 50 * 1.5;
         // canvas.clear();
         document.getElementById("others-div").style.display = "block";
-        for (var i = 0; i <= 600 / grid; i++) {
-            for (var j = 0; j <= 600 / grid; j++) {
+        for (var i = 0; i <= globalWidth / grid; i++) {
+            for (var j = 0; j <= globalWidth / grid; j++) {
                 if (j % 2 == 0) {
                     var rect = new fabric.Rect({
                         width: grid,
@@ -706,7 +712,7 @@ jQuery(function() {
                         top: j * grid,
                         left: i * grid,
                         stroke: 2,
-                        opacity: 1,
+                        opacity: 0.2,
                         fill: "rgba(0,0,0,0)"
                     });
                     rectArray.push(rect);
@@ -720,8 +726,8 @@ jQuery(function() {
                         height: grid,
                         top: j * grid,
                         stroke: 2,
-                        left: i * grid - 25 * 1.5,
-                        opacity: 1,
+                        left: i * grid - 25 * 1,
+                        opacity: 0.2,
                         fill: "rgba(0,0,0,0)",
                         hasControls: false,
                         selectable: false
@@ -743,7 +749,7 @@ jQuery(function() {
     function fillAll() {
         var objs = [];
         var objs = rectArray.map(function(o) {
-            currentAngle = o.width >= o.height ? 90 : 0;
+            // currentAngle = o.width >= o.height ? 90 : 0;
             handleAddTile(o);
             return o.set("active", true);
         });
@@ -755,7 +761,7 @@ jQuery(function() {
         const { left, top, height, width } = target;
         var tempLeft = 0;
         var tempTop = 0;
-        currentAngle = 0;
+        // currentAngle = 0;
         if (currentAngle == 0) {
             var tempWidth = 300;
             var tempHeight = 450;
@@ -853,16 +859,12 @@ jQuery(function() {
             obj[tilesTemp[i]['product']] = tilesTemp[i];
 
         tilesFinal = new Array();
+
         for (var key in obj) {
-            getDataUri($('img[data-product-id="' + obj[key].productID + '"]').attr('src'), function(dataUri) {
-                obj[key].src1 = dataUri;
-            });
-            obj[key].src = $('img[data-product-id="' + obj[key].productID + '"]').attr('src');
+            obj[key].imgSrc = $('img[data-product-id="' + obj[key].productID + '"]').attr('src');
             tilesFinal.push(obj[key]);
         }
 
-        // var tilesFinal = _.uniqBy(tilesTemp, "product");
-        // var tilesFinal = _.uniqBy(tilesTemp, "product");
         var template = jQuery("#handlebars-demo").html();
 
         var context = {
@@ -939,8 +941,8 @@ jQuery(function() {
     function createVerticalSquareAshlar(tileImage = null) {
         const grid = 50 * 1.5;
 
-        for (var i = 0; i <= 600 / grid; i++) {
-            for (var j = 0; j <= 600 / grid; j++) {
+        for (var i = 0; i <= globalWidth / grid; i++) {
+            for (var j = 0; j <= globalWidth / grid; j++) {
                 if (i % 2 == 0) {
                     var rect = new fabric.Rect({
                         width: grid,
@@ -948,7 +950,7 @@ jQuery(function() {
                         top: j * grid,
                         left: i * grid,
                         stroke: 2,
-                        opacity: 1,
+                        opacity: 0.2,
                         fill: "rgba(0,0,0,0)",
                         hasControls: false,
                         selectable: false
@@ -962,10 +964,10 @@ jQuery(function() {
                     var rect = new fabric.Rect({
                         width: grid,
                         height: grid,
-                        top: j * grid - 25 * 1.5,
+                        top: j * grid - 25 * 1,
                         stroke: 2,
                         left: i * grid,
-                        opacity: 1,
+                        opacity: 0.2,
                         fill: "rgba(0,0,0,0)",
                         hasControls: false,
                         selectable: false
@@ -986,9 +988,9 @@ jQuery(function() {
 
     // // PLANK ASHLAR
     function createPlankAshlar(tileImage = null) {
-        const grid = 25 * 1.5;
-        for (var i = 0; i <= 600 / grid; i++) {
-            for (var j = 0; j <= 600 / grid; j++) {
+        const grid = 25 * 1;
+        for (var i = 0; i <= globalWidth / grid; i++) {
+            for (var j = 0; j <= globalWidth / grid; j++) {
                 if (i % 2 == 0) {
                     var rect = new fabric.Rect({
                         width: grid,
@@ -996,7 +998,7 @@ jQuery(function() {
                         top: j * (grid * 3),
                         left: i * grid,
                         stroke: 2,
-                        opacity: 1,
+                        opacity: 0.2,
                         fill: "rgba(0,0,0,0)",
                         hasControls: false,
                         selectable: false
@@ -1013,7 +1015,7 @@ jQuery(function() {
                         top: j * (grid * 3) - (grid * 3) / 2,
                         stroke: 2,
                         left: i * grid,
-                        opacity: 1,
+                        opacity: 0.2,
                         fill: "rgba(0,0,0,0)",
                         hasControls: false,
                         selectable: false
@@ -1044,8 +1046,16 @@ jQuery(function() {
 
     handleGridSelector(jQuery('.product-pattern')[0].dataset.pattern);
     setupGalleryImage('hospitality');
+
+    jQuery('a[href="#tab2default"]').on('click', function() {
+        setupGalleryImage('hospitality');
+    });
+
+
 });
 
-function setArrangement(id) {
-    $('#arrangementBtn').html(`<img crossorigin="anonymous" src="${arrangements[id].icon}" height="40" width="40" /><span>${arrangements[id].name.substr(10)}</span>`);
-}
+jQuery(function() {
+    jQuery('.canvas-container').height(jQuery('.canvas-container').outerWidth(true));
+    jQuery('.canvas-container canvas').height(jQuery('.canvas-container canvas').outerWidth(true));
+    jQuery('.canvas-container canvas').height(jQuery('.canvas-container canvas').outerWidth(true));
+});

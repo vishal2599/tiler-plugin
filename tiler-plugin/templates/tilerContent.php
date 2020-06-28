@@ -1,5 +1,17 @@
 <?php
-$params = array('posts_per_page' => -1, 'post_type' => 'product');
+$params = array('posts_per_page' => -1, 'post_type' => 'product', 'meta_query' => array(
+    array(
+        'key' => '_stock_status',
+        'value' => 'instock',
+        'compare' => '=',
+    ),
+    'relation' => 'OR',
+    array(
+        'key' => '_stock_status',
+        'value' => '',
+        'compare' => 'NOT EXISTS'
+    ),
+));
 $wc_query = new WP_Query($params);
 $plugin_dir = plugin_dir_url(dirname(__FILE__, 1));
 ?>
@@ -8,18 +20,18 @@ $plugin_dir = plugin_dir_url(dirname(__FILE__, 1));
     const galleryImgs = {
         hospitality: {
             isVisible: false,
-            transform: "matrix3d(1.4, 0, 0, 0, -0.337, 0.4, 1, 0, 0, 0, 0.1, 0.1, 372.2, 122.1, 0, 1.7)",
+            transform: "matrix3d(1.4, 0, 0, 0, -0.437, 0.4, 1, 0, 0, 0, 0.1, 0.1, 493, 122.1, 0, 1.7)",
             // transform: "perspective(4500px) rotateX(65deg) rotateZ(19deg) rotateY(-6deg) translateY(-10px) translateX(298px) translateZ(-119px) scale(1.2)"
         },
         workspace: {
             isVisible: false,
-            transform:'matrix3d(1.39, 0, 0, 0, -0.337, 0.06, 1, 0, 0, 0, 0.1, 0.1, 160, 139, 0, 1.3)'
+            transform: 'matrix3d(1.39, 0, 0, 0, -0.337, 0.06, 1, 0, 0, 0, 0.1, 0.1, 160, 139, 0, 1.3)'
             // transform:'matrix3d(0.89, 0, 0, 0, -0.337, 0.06, 1, 0, 0, 0, 0.1, 0.1, 151.2, 120.1, 0, 0.9)'
             // transform: "perspective(4500px) rotateX(68deg) rotateZ(10deg) rotateY(-8deg) translateY(-8px) translateX(-41px) translateZ(-121px)"
         },
         publicspace: {
             isVisible: false,
-            transform: "matrix3d(1.39, 0, 0.0, 0, -0.937, 0.96, 0.7, 0, 0, 0, 0, -11.4, 80.9, -87.1, 0, 1.3)"
+            transform: "matrix3d(1.39, 0, 0, 0, -1.337, 0.96, 0.7, 0, 0, 0, 0, -40.4, 70.9, -87.1, 0, 1.3)"
             // transform: "perspective(3400px) rotate3d(1.3, -0.52, 0.6, 46deg) translateX(-65px) translateY(-133px) scale(1.3)"
         },
         myphoto: {
@@ -46,57 +58,65 @@ $plugin_dir = plugin_dir_url(dirname(__FILE__, 1));
                     <div class="tab-content">
                         <div class="tab-pane fade in active" id="tab1default">
                             <div class="row">
-                                <div class="col-sm-10 ">
+                                <div class="col-sm-12 ">
                                     <div class="row top-controls">
-                                        <div class="col-sm-12">
-                                            <div class="col-sm-5">
-                                                <div class="dropdown configurator-item">
-                                                    <p style="margin:0px !important; padding:0px !important">Arrangement</p>
-                                                    <button class="" id="arrangementBtn" type="button" data-toggle="dropdown"></button>
-                                                    <ul id="arrangement" class="dropdown-menu" style="width: 350px !important;">
-                                                    </ul>
-                                                </div>
+                                        <div class="col-sm-4">
+                                            <div class="dropdown configurator-item">
+                                                <p style="margin:0px !important; padding:0px !important">Arrangement</p>
+                                                <button class="" id="arrangementBtn" type="button" data-toggle="dropdown"></button>
+                                                <ul id="arrangement" class="dropdown-menu" style="width: 350px !important;">
+                                                </ul>
                                             </div>
-                                            <div class="col-sm-4">
-                                                <div class="dropdown configurator-item">
-                                                    <p style="margin:0px !important; padding:0px !important">Product</p>
-                                                    <button id="productBtn" class="dropdown-btn" type="button" data-toggle="dropdown">Select </button>
-                                                    <ul class="dropdown-menu tile-list" id="tile-list" style=" width: 500px;">
-                                                    </ul>
-                                                    <ul id="pseudoTileList" style="display:none;">
-                                                        <?php if ($wc_query->have_posts()) : ?>
-                                                            <?php while ($wc_query->have_posts()) :
-                                                                $wc_query->the_post();
-                                                                /* grab the url for the full size featured image */
-                                                                $product = wc_get_product(get_the_ID());
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="dropdown configurator-item">
+                                                <p style="margin:0px !important; padding:0px !important">Product</p>
+                                                <button id="productBtn" class="dropdown-btn" type="button" data-toggle="dropdown">Select </button>
+                                                <ul class="dropdown-menu tile-list" id="tile-list" style=" width: 500px;">
+                                                </ul>
+                                                <ul id="pseudoTileList" style="display:none;">
+                                                    <?php if ($wc_query->have_posts()) : ?>
+                                                        <?php while ($wc_query->have_posts()) :
+                                                            $wc_query->the_post();
+                                                            /* grab the url for the full size featured image */
+                                                            $product = wc_get_product(get_the_ID());
 
-                                                                $prodColors = implode(", ", array_values(wc_get_product_terms($product->id, 'pa_color', array('fields' => 'names'))));
+                                                            $prodColors = implode(", ", array_values(wc_get_product_terms($product->id, 'pa_colors', array('fields' => 'names'))));
 
-                                                                $prodSize = implode(", ", array_values(wc_get_product_terms($product->id, 'pa_size', array('fields' => 'names'))));
+                                                            $prodSize = implode(", ", array_values(wc_get_product_terms($product->id, 'pa_dimensions', array('fields' => 'names'))));
 
-                                                                $prodThickness = implode(", ", array_values(wc_get_product_terms($product->id, 'pa_thickness', array('fields' => 'names'))));
+                                                            $prodThickness = implode(", ", array_values(wc_get_product_terms($product->id, 'pa_backing-thickness', array('fields' => 'names'))));
 
-                                                                $prodWeight = implode(", ", array_values(wc_get_product_terms($product->id, 'pa_weight', array('fields' => 'names'))));
-                                                                $featured_img_url = wp_get_attachment_image_src(get_post_thumbnail_id($product->id), 'single-post-thumbnail')[0];
-                                                            ?>
-                                                                <img class="single-tile-image" data-weight="<?php echo $prodWeight; ?>" data-thickness="<?php echo $prodThickness; ?>" data-size="<?php echo $prodSize; ?>" data-color="<?php echo $prodColors; ?>" data-product-id="<?php echo $product->get_id(); ?>" data-add-to-cart-url="<?php echo $product->get_permalink(); ?>" height="50" width="auto" data-name="<?php echo $product->get_name(); ?>" data-sku="<?php echo $product->get_sku(); ?>" data-slug="<?php echo $product->get_slug(); ?>" src="<?php echo $featured_img_url; ?>" height="50" width="auto">
-                                                            <?php endwhile; ?>
-                                                            <?php wp_reset_postdata(); ?>
-                                                        <?php else :  ?>
-                                                            <li>
-                                                                <?php _e('No Products'); ?>
-                                                            </li>
-                                                        <?php endif; ?>
-                                                    </ul>
-                                                </div>
+                                                            $prodWeight = implode(", ", array_values(wc_get_product_terms($product->id, 'pa_weight', array('fields' => 'names'))));
+                                                            $featured_img_url = wp_get_attachment_image_src(get_post_thumbnail_id($product->id), 'single-post-thumbnail')[0];
+                                                        ?>
+                                                            <img class="single-tile-image" data-weight="<?php echo $prodWeight; ?>" data-thickness="<?php echo $prodThickness; ?>" data-size="<?php echo $prodSize; ?>" data-color="<?php echo $prodColors; ?>" data-product-id="<?php echo $product->get_id(); ?>" data-add-to-cart-url="<?php echo $product->get_permalink(); ?>" height="50" width="auto" data-name="<?php echo $product->get_name(); ?>" data-sku="<?php echo $product->get_sku(); ?>" data-slug="<?php echo $product->get_slug(); ?>" src="<?php echo $featured_img_url; ?>" height="50" width="auto">
+                                                        <?php endwhile; ?>
+                                                        <?php wp_reset_postdata(); ?>
+                                                    <?php else :  ?>
+                                                        <li>
+                                                            <?php _e('No Products'); ?>
+                                                        </li>
+                                                    <?php endif; ?>
+                                                </ul>
                                             </div>
-                                            <div class="col-sm-3">
-                                                <div class="configurator-item">
-                                                    <p style="margin:0px !important; padding:0px !important">Tile Direction</p>
-
-                                                    <img style="display:inline-block;float:left;cursor:pointer" id="d_vertical" class="orientation-button o-vertical" src="<?php echo $plugin_dir; ?>assets/images/button-tiledirection-vertical-off.png" width="30" height="30" />
-                                                    <img style="margin-left:10px;display:inline-block;float:left;cursor:pointer" id="d_horizontal" class="orientation-button o-horizontal" src="<?php echo $plugin_dir; ?>assets/images/button-tiledirection-horiz-off.png" width="30" height="30" />
-                                                </div>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <div class="configurator-item direction">
+                                                <p>Tile Direction</p>
+                                                <img id="d_vertical" class="orientation-button o-vertical set-angle active" src="<?php echo $plugin_dir; ?>assets/images/button-tiledirection-vertical-off.png" data-angle="0" />
+                                                <img id="d_horizontal" class="orientation-button o-horizontal set-angle" src="<?php echo $plugin_dir; ?>assets/images/button-tiledirection-horiz-off.png" data-angle="90" />
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3 right-control">
+                                            <div class="configurator-item">
+                                                <img id="fillAll" class="orientation-button icon-btn" src="<?php echo $plugin_dir; ?>assets/images/button-fill-off.png" data-toggle="tooltip" title="Fill All" />
+                                            </div>
+                                            <div class="configurator-item">
+                                                <img id="undo" class="orientation-button icon-btn" src="<?php echo $plugin_dir; ?>assets/images/button-undo-off.png" data-toggle="tooltip" title="Undo" />
+                                            </div>
+                                            <div class="configurator-item">
+                                                <img id="clear" class="orientation-button icon-btn" src="<?php echo $plugin_dir; ?>assets/images/button-clearall-off.png" data-toggle="tooltip" title="Clear All" />
                                             </div>
                                         </div>
                                     </div>
@@ -114,37 +134,25 @@ $plugin_dir = plugin_dir_url(dirname(__FILE__, 1));
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-2 right-control">
-                                    <div class="configurator-item">
-                                        <p style="margin:0px !important; padding:0px !important">Fill All</p>
-                                        <img id="fillAll" class="orientation-button icon-btn" src="<?php echo $plugin_dir; ?>assets/images/button-fill-off.png" width="30" height="30" />
-                                    </div>
-                                    <div class="configurator-item">
-                                        <p style="margin:0px !important; padding:0px !important">Undo</p>
-                                        <img id="undo" class="orientation-button icon-btn" src="<?php echo $plugin_dir; ?>assets/images/button-undo-off.png" width="30" height="30" />
-                                    </div>
-                                    <div class="configurator-item">
-                                        <p style="margin:0px !important; padding:0px !important">Clear All</p>
-                                        <img id="clear" class="orientation-button icon-btn" src="<?php echo $plugin_dir; ?>assets/images/button-clearall-off.png" width="30" height="30" />
-                                    </div>
-                                </div>
                             </div>
 
                         </div> <!-- ends what-->
                         <div class="tab-pane fade" id="tab2default">
-                            <div class="row p-2" style="margin-left:20px;">
-                                <div class="configurator-item active">
-                                    <button class="plugin-red-btn" id="hospitalityBtn" type="button">HOSPITALITY</button>
-                                </div>
-                                <div class="configurator-item">
-                                    <button class="plugin-red-btn" id="workspaceBtn" type="button">WORKSPACE</button>
-                                </div>
-                                <div class="configurator-item">
-                                    <button class="plugin-red-btn" id="publicspaceBtn" type="button">PUBLIC SPACE</button>
+                            <div class="row p-2">
+                                <div class="col-sm-12">
+                                    <div class="configurator-item active">
+                                        <button class="plugin-red-btn" id="hospitalityBtn" type="button">HOSPITALITY</button>
+                                    </div>
+                                    <div class="configurator-item">
+                                        <button class="plugin-red-btn" id="workspaceBtn" type="button">WORKSPACE</button>
+                                    </div>
+                                    <div class="configurator-item">
+                                        <button class="plugin-red-btn" id="publicspaceBtn" type="button">PUBLIC SPACE</button>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row p-2">
-                                <div style="display: flex !important;justify-content: center !important;">
+                                <div class="col-sm-12">
                                     <div class="gallery-img-wrapper">
                                         <div id="hospitality">
                                             <img class="gallery-img" src="" />
@@ -182,7 +190,7 @@ $plugin_dir = plugin_dir_url(dirname(__FILE__, 1));
             <script id="handlebars-demo" type="text/x-handlebars-template">
                 {{#each tilesFinal}}
                     <div style="display: flex;justify-content: space-around; margin-top:15px;">
-                        <div style="display:inline-block;float:left;height:75px;width:75px;background-image:url('{{src}}'); background-size: 100%;">
+                        <div style="display:inline-block;float:left;height:75px;width:75px;background-image:url('{{imgSrc}}'); background-size: 100%;">
                         </div>
                         <div style="display:inline-block;float:left;width: 200px;max-height: 200px;overflow: hidden;padding-left: 10px;">
                             <span style="display:block;line-height: 15px;margin-bottom: 8px;">{{productName}}</span>
