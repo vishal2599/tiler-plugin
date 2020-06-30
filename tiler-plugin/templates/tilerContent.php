@@ -88,9 +88,10 @@ $plugin_dir = plugin_dir_url(dirname(__FILE__, 1));
                                                             $prodThickness = implode(", ", array_values(wc_get_product_terms($product->id, 'pa_backing-thickness', array('fields' => 'names'))));
 
                                                             $prodWeight = implode(", ", array_values(wc_get_product_terms($product->id, 'pa_weight', array('fields' => 'names'))));
+                                                            $availability = implode(", ", array_values(wc_get_product_terms($product->id, 'pa_lead-time', array('fields' => 'names'))));
                                                             $featured_img_url = wp_get_attachment_image_src(get_post_thumbnail_id($product->id), 'single-post-thumbnail')[0];
                                                         ?>
-                                                            <img class="single-tile-image" data-weight="<?php echo $prodWeight; ?>" data-thickness="<?php echo $prodThickness; ?>" data-size="<?php echo $prodSize; ?>" data-color="<?php echo $prodColors; ?>" data-product-id="<?php echo $product->get_id(); ?>" data-add-to-cart-url="<?php echo $product->get_permalink(); ?>" height="50" width="auto" data-name="<?php echo $product->get_name(); ?>" data-sku="<?php echo $product->get_sku(); ?>" data-slug="<?php echo $product->get_slug(); ?>" src="<?php echo $featured_img_url; ?>" height="50" width="auto">
+                                                            <img class="single-tile-image" data-weight="<?php echo $prodWeight; ?>" data-thickness="<?php echo $prodThickness; ?>" data-size="<?php echo $prodSize; ?>" data-color="<?php echo $prodColors; ?>" data-product-id="<?php echo $product->get_id(); ?>" data-add-to-cart-url="<?php echo $product->get_permalink(); ?>" height="50" width="auto" data-name="<?php echo $product->get_name(); ?>" data-sku="<?php echo $product->get_sku(); ?>" data-slug="<?php echo $product->get_slug(); ?>" src="<?php echo $featured_img_url; ?>" data-availability='<?= $availability ?>' height="50" width="auto">
                                                         <?php endwhile; ?>
                                                         <?php wp_reset_postdata(); ?>
                                                     <?php else :  ?>

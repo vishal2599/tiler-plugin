@@ -207,11 +207,23 @@
 }
 
 .tiler-area ul.nav-tabs>li {
-    margin: 0;
+    margin: 0 0 -1px 0;
     border-left: 1px solid;
     border-right: 1px solid;
     border-top: 1px solid;
     background-color: #efefef;
+}
+
+.tiler-area ul.nav-tabs>li:after {
+    content: "";
+    position: absolute;
+    right: -8px;
+    top: -1px;
+    background-color: inherit;
+    width: 14px;
+    height: calc(100% + 2px);
+    border-right: 1px solid;
+    transform: rotate(-15deg) skew(3deg, 15deg);
 }
 
 .tiler-area ul li.active {
@@ -221,7 +233,7 @@
 }
 
 .tiler-area ul li:first-child {
-    margin-right: -1px;
+    margin-right: 20px;
 }
 
 .tiler-area .nav-tabs>li>a {

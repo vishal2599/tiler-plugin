@@ -1,5 +1,6 @@
 let arrangements = [];
 var globalWidth = 600;
+var vertCtx, horiCtx;
 jQuery(function() {
 
     globalWidth = (jQuery('.tiler-area .col-sm-12.relative').width() > 600) ? jQuery('.tiler-area .col-sm-12.relative').width() : 600;
@@ -103,7 +104,7 @@ jQuery(function() {
                     image: el.src
                 },
                 ['PRODUCT', 'CODE', 'COLOR', 'SIZE', 'THICKNESS', 'WEIGHT', 'AVAILIBILITY'],
-                [': ' + el.productName, ': ' + el.productSKU, ': ' + el.productColor, ': ' + el.productSize, ': ' + el.productThickness, ': ' + el.productWeight, ': AVAILIBILE']
+                [': ' + el.productName, ': ' + el.productSKU, ': ' + el.productColor, ': ' + el.productSize, ': ' + el.productThickness, ': ' + el.productWeight, ': ' + el.productAvail]
             ]
         }, '______________________________________________\n\n\n']);
 
@@ -231,8 +232,8 @@ jQuery(function() {
         $('#tile-list').html(template);
         jQuery(".single-tile-image").click(function(ret) {
             jQuery('#productBtn').html(`<img crossorigin="anonymous" src="${ret.target.src}"/><span>${ret.target.dataset.name}</span>`);
-            var vertCtx = verticalTempCanvas.getContext("2d");
-            var horiCtx = horizontalTempCanvas.getContext("2d");
+            vertCtx = verticalTempCanvas.getContext("2d");
+            horiCtx = horizontalTempCanvas.getContext("2d");
 
             if (currentTileImageSource !== "") {
                 horiCtx.rotate(-Math.PI / 2);
@@ -252,6 +253,7 @@ jQuery(function() {
             currentTileImageName = ret.target.dataset.name;
             currentTileProductID = ret.target.dataset.productId;
             currentTileProductCartURL = ret.target.dataset.addToCartUrl;
+            currentTileAvailability = ret.target.dataset.availability;
 
             // verticalTempCanvas.clear();
             // horizontalTempCanvas.clear();
@@ -384,9 +386,11 @@ jQuery(function() {
         jQuery(this).addClass('selected');
         var id = jQuery(this).data('id');
         $('#arrangementBtn').html(`<img crossorigin="anonymous" src="${arrangements[id].icon}" height="40" width="40" /><span>${arrangements[id].name.substr(10)}</span>`);
+
         $('#productBtn').html(`Select`);
+        calculateSelectedTiles();
         rectArray = [];
-        currentTileImageSource = null;
+        currentTileImageSource = vertCtx = horiCtx = null;
         selectedProduct = event.currentTarget.dataset.pattern;
         handleGridSelector(event.currentTarget.dataset.pattern);
     });
@@ -487,7 +491,7 @@ jQuery(function() {
     function createHerringbone(tileImage = null) {
 
         canvas.clear();
-        const grid = 30 * 1;
+        const grid = 25 * 2;
         let canvasDiagonal = Math.sqrt((globalWidth * globalWidth) + (globalWidth * globalWidth));
         let tileDiagonal = Math.sqrt((grid * grid) + (grid * grid));
         let tileHeight = grid * 3;
@@ -601,7 +605,7 @@ jQuery(function() {
 
     // Create square monolithic
     function createSquareMonolithic(tileImage = null) {
-        const grid = 50 * 1;
+        const grid = 50 * 1.5;
 
         for (var i = 0; i <= globalWidth / grid; i++) {
             for (var j = 0; j <= globalWidth / grid; j++) {
@@ -650,7 +654,7 @@ jQuery(function() {
 
     // PLANK MONOLITHIC
     function createPlankMonolithic(tileImage) {
-        const grid = 25 * 1;
+        const grid = 25 * 2;
         for (var i = 0; i <= globalWidth / grid; i++) {
             for (var j = 0; j <= globalWidth / grid; j++) {
                 if (j % 2 == 0) {
@@ -747,9 +751,14 @@ jQuery(function() {
     }
 
     function fillAll() {
+        canvas.clear();
         var objs = [];
+        // console.log(rectArray.length);
+        // console.log(rectArray);
         var objs = rectArray.map(function(o) {
+            // console.log(o);
             // currentAngle = o.width >= o.height ? 90 : 0;
+            // canvas.remove(target);
             handleAddTile(o);
             return o.set("active", true);
         });
@@ -796,6 +805,7 @@ jQuery(function() {
                     productName: currentTileImageName,
                     productURL: currentTileProductCartURL,
                     productID: currentTileProductID,
+                    productAvail: currentTileAvailability,
                     evented: true,
                     hasControls: false,
                     selectable: false
@@ -818,6 +828,7 @@ jQuery(function() {
                             "productThickness",
                             "productSKU",
                             "productName",
+                            "productAvail",
                             "selectable",
                             "hasControls",
                             "mousedown"
@@ -843,6 +854,7 @@ jQuery(function() {
                 "productColor",
                 "productThickness",
                 "productName",
+                "productAvail",
                 "selectable",
                 "hasControls",
                 "mousedown"
@@ -988,7 +1000,7 @@ jQuery(function() {
 
     // // PLANK ASHLAR
     function createPlankAshlar(tileImage = null) {
-        const grid = 25 * 1;
+        const grid = 25 * 2;
         for (var i = 0; i <= globalWidth / grid; i++) {
             for (var j = 0; j <= globalWidth / grid; j++) {
                 if (i % 2 == 0) {
