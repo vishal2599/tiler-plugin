@@ -31,7 +31,7 @@ $plugin_dir = plugin_dir_url(dirname(__FILE__, 1));
         },
         publicspace: {
             isVisible: false,
-            transform: "matrix3d(1.39, 0, 0, 0, -1.337, 0.96, 0.7, 0, 0, 0, 0, -40.4, 70.9, -87.1, 0, 1.3)"
+            transform: "matrix3d(0.89, 0, 0, 0, -0.437, 0.46, 0.8, 0, -1.2, -2.1, 0, 0, 159.9, 22.7, 0, 1.3)"
             // transform: "perspective(3400px) rotate3d(1.3, -0.52, 0.6, 46deg) translateX(-65px) translateY(-133px) scale(1.3)"
         },
         myphoto: {
@@ -68,7 +68,7 @@ $plugin_dir = plugin_dir_url(dirname(__FILE__, 1));
                                                 </ul>
                                             </div>
                                         </div>
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-4">
                                             <div class="dropdown configurator-item">
                                                 <p style="margin:0px !important; padding:0px !important">Product</p>
                                                 <button id="productBtn" class="dropdown-btn" type="button" data-toggle="dropdown">Select </button>
@@ -102,22 +102,27 @@ $plugin_dir = plugin_dir_url(dirname(__FILE__, 1));
                                                 </ul>
                                             </div>
                                         </div>
-                                        <div class="col-sm-2">
-                                            <div class="configurator-item direction">
-                                                <p>Tile Direction</p>
-                                                <img id="d_vertical" class="orientation-button o-vertical set-angle active" src="<?php echo $plugin_dir; ?>assets/images/button-tiledirection-vertical-off.png" data-angle="0" />
-                                                <img id="d_horizontal" class="orientation-button o-horizontal set-angle" src="<?php echo $plugin_dir; ?>assets/images/button-tiledirection-horiz-off.png" data-angle="90" />
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-3 right-control">
-                                            <div class="configurator-item">
-                                                <img id="fillAll" class="orientation-button icon-btn" src="<?php echo $plugin_dir; ?>assets/images/button-fill-off.png" data-toggle="tooltip" title="Fill All" />
-                                            </div>
-                                            <div class="configurator-item">
-                                                <img id="undo" class="orientation-button icon-btn" src="<?php echo $plugin_dir; ?>assets/images/button-undo-off.png" data-toggle="tooltip" title="Undo" />
-                                            </div>
-                                            <div class="configurator-item">
-                                                <img id="clear" class="orientation-button icon-btn" src="<?php echo $plugin_dir; ?>assets/images/button-clearall-off.png" data-toggle="tooltip" title="Clear All" />
+                                        <div class="col-sm-4 controls">
+                                            <p class="title">Tile Direction</p>
+                                            <div class="row">
+                                                <div class="col-sm-5 left-control">
+                                                    <div class="configurator-item direction">
+                                                        <img id="d_vertical" class="orientation-button o-vertical set-angle active" src="<?php echo $plugin_dir; ?>assets/images/button-tiledirection-vertical-off.png" data-angle="0" />
+                                                        <img id="d_horizontal" class="orientation-button o-horizontal set-angle" src="<?php echo $plugin_dir; ?>assets/images/button-tiledirection-horiz-off.png" data-angle="90" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-7 right-control">
+                                                    <p class="title" style="display: none;">Tile Direction</p>
+                                                    <div class="configurator-item">
+                                                        <img id="fillAll" class="orientation-button icon-btn" src="<?php echo $plugin_dir; ?>assets/images/button-fill-off.png" data-toggle="tooltip" title="Fill All" />
+                                                    </div>
+                                                    <div class="configurator-item">
+                                                        <img id="undo" class="orientation-button icon-btn" src="<?php echo $plugin_dir; ?>assets/images/button-undo-off.png" data-toggle="tooltip" title="Undo" />
+                                                    </div>
+                                                    <div class="configurator-item">
+                                                        <img id="clear" class="orientation-button icon-btn" src="<?php echo $plugin_dir; ?>assets/images/button-clearall-off.png" data-toggle="tooltip" title="Clear All" />
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

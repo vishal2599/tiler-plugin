@@ -4,7 +4,6 @@ var vertCtx, horiCtx;
 jQuery(function() {
 
     globalWidth = (jQuery('.tiler-area .col-sm-12.relative').width() > 600) ? jQuery('.tiler-area .col-sm-12.relative').width() : 600;
-    console.log(globalWidth);
 
     var $ = jQuery;
     var pluginDir = $('input[name="plugindir"]').val();
@@ -78,7 +77,6 @@ jQuery(function() {
         var img = new Image();
         img.onload = function() {
             ctx.drawImage(img, 0, 0);
-            console.log(myCanvas.toDataURL());
             return myCanvas.toDataURL();
         };
         img.src = fileSrc;
@@ -106,7 +104,7 @@ jQuery(function() {
                 ['PRODUCT', 'CODE', 'COLOR', 'SIZE', 'THICKNESS', 'WEIGHT', 'AVAILIBILITY'],
                 [': ' + el.productName, ': ' + el.productSKU, ': ' + el.productColor, ': ' + el.productSize, ': ' + el.productThickness, ': ' + el.productWeight, ': ' + el.productAvail]
             ]
-        }, '______________________________________________\n\n\n']);
+        }, '___________________________________________________________\n\n\n']);
 
         return result;
     }
@@ -117,6 +115,8 @@ jQuery(function() {
         let generatedImage = canvas.toDataURL();
 
         let dd = {
+            pageSize: 'LETTER',
+            pageOrientation: 'landscape',
             content: [{
                 alignments: ['left', 'right'],
                 columns: [
@@ -128,14 +128,14 @@ jQuery(function() {
                         getTilesDetails(window.tilesFinal)
                     ],
                     [{
-                            width: 250,
-                            height: 250,
+                            width: 350,
+                            height: 350,
                             image: generatedImage
                         },
-                        '\n\n',
+                        '\n\n\n\n',
                         {
-                            width: 250,
-                            height: 45,
+                            width: 350,
+                            height: 63,
                             image: logo1
                         }
                     ]
@@ -151,7 +151,6 @@ jQuery(function() {
                 columnGap: 10
             }
         };
-        console.log(window.tilesFinal);
         pdfMake.createPdf(dd).download();
     };
 
@@ -299,6 +298,10 @@ jQuery(function() {
     // $('#productBtn').html(`<img crossorigin="anonymous" src="${$('#pseudoTileList img')[0].src}"/><span>${$('#pseudoTileList img')[0].dataset.name}</span>`);
 
     function setupGalleryImage(key) {
+        if (key == 'hospitality') {
+            $('.configurator-item').removeClass('active');
+            $("#hospitalityBtn").parent().addClass('active');
+        }
         // jQuery('.tiler-area .gallery-img-wrapper').height(jQuery('.tiler-area .gallery-img-wrapper').outerWidth(true));
         let canvas = document.getElementById('others-div').getElementsByClassName('lower-canvas')[0];
         let setupObj = galleryImgs[key];
@@ -382,17 +385,15 @@ jQuery(function() {
 
     jQuery(".product-pattern").on("click", function(event) {
         canvas.clear();
+
         jQuery(".product-pattern").removeClass('selected');
         jQuery(this).addClass('selected');
         var id = jQuery(this).data('id');
         $('#arrangementBtn').html(`<img crossorigin="anonymous" src="${arrangements[id].icon}" height="40" width="40" /><span>${arrangements[id].name.substr(10)}</span>`);
-
         $('#productBtn').html(`Select`);
         calculateSelectedTiles();
-        rectArray = [];
-        currentTileImageSource = vertCtx = horiCtx = null;
-        selectedProduct = event.currentTarget.dataset.pattern;
         handleGridSelector(event.currentTarget.dataset.pattern);
+        $('#printPDF,#printPDFLabel').hide();
     });
 
     jQuery('.set-angle').on('click', function() {
@@ -402,6 +403,7 @@ jQuery(function() {
     });
 
     jQuery("#fillAll").on("click", function(ret) {
+        selectedProduct = jQuery('.product-pattern.selected')[0].dataset.pattern;
         handleGridSelector(selectedProduct, currentTileImageSource, true);
         setupGalleryImage('hospitality');
     });
@@ -458,28 +460,59 @@ jQuery(function() {
 
     function handleGridSelector(selectedProduct, selectedTile = null) {
         rectArray = [];
+        $('#d_vertical').trigger('click');
         switch (selectedProduct) {
             case "square":
+                $('p.title').show();
+                $('.right-control p.title').hide();
+                $('.left-control').removeAttr('style');
                 createProductDropdown('square');
                 createSquareMonolithic(selectedTile);
                 break;
             case "v-ashlar":
+                $('p.title').show();
+                $('.right-control p.title').hide();
+                $('.left-control').removeAttr('style');
                 createProductDropdown('square');
                 createVerticalSquareAshlar(selectedTile);
                 break;
             case "h-ashlar":
+                $('p.title').show();
+                $('.right-control p.title').hide();
+                $('.left-control').removeAttr('style');
                 createProductDropdown('square');
                 createHorizontalSquareAshlar(selectedTile);
                 break;
             case "plank-monolithic":
+                $('p.title').hide();
+                $('.right-control p.title').show();
+                $('.left-control').css({
+                    'opacity': 0,
+                    'visibility': 'hidden',
+                    'z-index': '-1111px'
+                });
                 createProductDropdown('plank');
                 createPlankMonolithic(selectedTile);
                 break;
             case "plank-ashlar":
+                $('p.title').hide();
+                $('.right-control p.title').show();
+                $('.left-control').css({
+                    'opacity': 0,
+                    'visibility': 'hidden',
+                    'z-index': '-1111px'
+                });
                 createProductDropdown('plank');
                 createPlankAshlar(selectedTile);
                 break;
             case 'herringbone':
+                $('p.title').hide();
+                $('.right-control p.title').show();
+                $('.left-control').css({
+                    'opacity': 0,
+                    'visibility': 'hidden',
+                    'z-index': '-1111px'
+                });
                 createProductDropdown('plank');
                 createHerringbone(selectedTile);
                 break;
@@ -753,12 +786,8 @@ jQuery(function() {
     function fillAll() {
         canvas.clear();
         var objs = [];
-        // console.log(rectArray.length);
-        // console.log(rectArray);
         var objs = rectArray.map(function(o) {
-            // console.log(o);
             // currentAngle = o.width >= o.height ? 90 : 0;
-            // canvas.remove(target);
             handleAddTile(o);
             return o.set("active", true);
         });
@@ -767,79 +796,86 @@ jQuery(function() {
     }
 
     function handleAddTile(target) {
-        const { left, top, height, width } = target;
-        var tempLeft = 0;
-        var tempTop = 0;
-        // currentAngle = 0;
-        if (currentAngle == 0) {
-            var tempWidth = 300;
-            var tempHeight = 450;
-            tempLeft =
-                (Math.floor(Math.random() * (tempWidth / width) - 1) + 1) * width;
-            tempTop =
-                (Math.floor(Math.random() * (tempHeight / height) - 1) + 1) * height;
-        }
-
-        if (currentAngle == 90) {
-            var tempWidth = 450;
-            var tempHeight = 300;
-
-            tempLeft =
-                (Math.floor(Math.random() * (tempWidth / width) - 1) + 1) * width;
-            tempTop =
-                (Math.floor(Math.random() * (tempHeight / height) - 1) + 1) * height;
-        }
-
-        fabric.Image.fromURL(
-            crop(verticalTempCanvas, tempLeft, tempTop, width, height),
-            function(myImg) {
-                var img1 = myImg.set({
-                    top: top,
-                    left: left,
-                    product: currentTileImageID,
-                    productSize: currentTileSize,
-                    productWeight: currentTileWeight,
-                    productThickness: currentTileThickness,
-                    productColor: currentTileColor,
-                    productSKU: currentTileImageSKU,
-                    productName: currentTileImageName,
-                    productURL: currentTileProductCartURL,
-                    productID: currentTileProductID,
-                    productAvail: currentTileAvailability,
-                    evented: true,
-                    hasControls: false,
-                    selectable: false
-                });
-
-                img1.on("mousedown", function(event) {
-                    handleImageTileClick(event.target);
-                });
-
-                canvas.add(img1);
-                actionArray.push(
-                    JSON.stringify(
-                        canvas.toDatalessJSON([
-                            "productURL",
-                            "productID",
-                            "product",
-                            "productSize",
-                            "productWeight",
-                            "productColor",
-                            "productThickness",
-                            "productSKU",
-                            "productName",
-                            "productAvail",
-                            "selectable",
-                            "hasControls",
-                            "mousedown"
-                        ])
-                    )
-                );
-
-                calculateSelectedTiles();
+        if ($('#productBtn').text() != 'Select') {
+            const { left, top, height, width } = target;
+            var tempLeft = 0;
+            var tempTop = 0;
+            if (target.width > target.height) {
+                $('#d_horizontal').trigger('click');
+            } else if (target.width < target.height) {
+                $('#d_vertical').trigger('click');
             }
-        );
-        setupGalleryImage('hospitality');
+            // currentAngle = 0;
+            if (currentAngle == 0) {
+                var tempWidth = 300;
+                var tempHeight = 450;
+                tempLeft =
+                    (Math.floor(Math.random() * (tempWidth / width) - 1) + 1) * width;
+                tempTop =
+                    (Math.floor(Math.random() * (tempHeight / height) - 1) + 1) * height;
+            }
+
+            if (currentAngle == 90) {
+                var tempWidth = 450;
+                var tempHeight = 300;
+
+                tempLeft =
+                    (Math.floor(Math.random() * (tempWidth / width) - 1) + 1) * width;
+                tempTop =
+                    (Math.floor(Math.random() * (tempHeight / height) - 1) + 1) * height;
+            }
+
+            fabric.Image.fromURL(
+                crop(verticalTempCanvas, tempLeft, tempTop, width, height),
+                function(myImg) {
+                    var img1 = myImg.set({
+                        top: top,
+                        left: left,
+                        product: currentTileImageID,
+                        productSize: currentTileSize,
+                        productWeight: currentTileWeight,
+                        productThickness: currentTileThickness,
+                        productColor: currentTileColor,
+                        productSKU: currentTileImageSKU,
+                        productName: currentTileImageName,
+                        productURL: currentTileProductCartURL,
+                        productID: currentTileProductID,
+                        productAvail: currentTileAvailability,
+                        evented: true,
+                        hasControls: false,
+                        selectable: false
+                    });
+
+                    img1.on("mousedown", function(event) {
+                        handleImageTileClick(event.target);
+                    });
+
+                    canvas.add(img1);
+                    actionArray.push(
+                        JSON.stringify(
+                            canvas.toDatalessJSON([
+                                "productURL",
+                                "productID",
+                                "product",
+                                "productSize",
+                                "productWeight",
+                                "productColor",
+                                "productThickness",
+                                "productSKU",
+                                "productName",
+                                "productAvail",
+                                "selectable",
+                                "hasControls",
+                                "mousedown"
+                            ])
+                        )
+                    );
+
+                    calculateSelectedTiles();
+                }
+            );
+            setupGalleryImage('hospitality');
+        }
     }
 
     function calculateSelectedTiles() {
