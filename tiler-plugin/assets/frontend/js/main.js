@@ -41,7 +41,7 @@ jQuery(function() {
 
 
 
-    let logo = logo1 = null;
+    let logo = logo1 = pdf1 = pdf2 = null;
 
     function getDataUri(url, callback) {
         let image = new Image();
@@ -67,6 +67,12 @@ jQuery(function() {
     });
     getDataUri(pluginDir + "assets/images/Wayflor-FeatureIcons.jpg", function(dataUri) {
         logo1 = dataUri;
+    });
+    getDataUri(pluginDir + "assets/images/pdf1.png", function(dataUri) {
+        pdf1 = dataUri;
+    });
+    getDataUri(pluginDir + "assets/images/pdf2.png", function(dataUri) {
+        pdf2 = dataUri;
     });
 
     function getDataUrl(fileSrc) {
@@ -101,8 +107,8 @@ jQuery(function() {
                     height: hgt,
                     image: el.src
                 },
-                ['PRODUCT', 'CODE', 'COLOR', 'SIZE', 'THICKNESS', 'WEIGHT', 'AVAILIBILITY'],
-                [': ' + el.productName, ': ' + el.productSKU, ': ' + el.productColor, ': ' + el.productSize, ': ' + el.productThickness, ': ' + el.productWeight, ': ' + el.productAvail]
+                ['PRODUCT:', 'CODE:', 'COLOR:', 'SIZE:', 'THICKNESS:', 'WEIGHT:', 'AVAILIBILITY:'],
+                [' ' + el.productName, ' ' + el.productSKU, ' ' + el.productColor, ' ' + el.productSize, ' ' + el.productThickness, ' ' + el.productWeight, ' ' + el.productAvail]
             ]
         }, '___________________________________________________________\n\n\n']);
 
@@ -132,11 +138,16 @@ jQuery(function() {
                             height: 350,
                             image: generatedImage
                         },
+                        {
+                            width: 350,
+                            height: 18,
+                            image: pdf1
+                        },
                         '\n\n\n\n',
                         {
                             width: 350,
-                            height: 63,
-                            image: logo1
+                            height: 90,
+                            image: pdf2
                         }
                     ]
                 ]
@@ -144,6 +155,7 @@ jQuery(function() {
             styles: {
                 label: {
                     fontSize: 10,
+                    // 					font: 'Montserrat',
                     color: 'grey'
                 }
             },

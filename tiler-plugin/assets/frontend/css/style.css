@@ -232,7 +232,7 @@
     background-color: #fff;
 }
 
-.tiler-area ul li:first-child {
+.tiler-area ul.nav-tabs li:first-child {
     margin-right: 20px;
 }
 
@@ -267,7 +267,14 @@
 }
 
 .tiler-area .dropdown.configurator-item button span {
-    margin-left: 5px;
+    display: flex;
+    margin-left: 7px;
+    width: calc(100% - 37px);
+    float: right;
+    line-height: 14px;
+    height: 30px;
+    vertical-align: middle;
+    align-items: center;
 }
 
 .tiler-area .row.top-controls {
@@ -375,7 +382,7 @@
 
 button#arrangementBtn img {
     max-height: 30px;
-    width: auto;
+    width: 30px;
 }
 
 a.product-pattern {
@@ -389,4 +396,20 @@ a.product-pattern {
 p.title {
     margin: 0;
     text-align: center;
+}
+
+.product-pattern img {
+    width: 35px;
+    margin-right: 10px;
+}
+
+.tiler-area ul li.active:before {
+    content: '';
+    height: 6px;
+    background: #fff;
+    width: calc(100% + 13px);
+    position: absolute;
+    bottom: -3px;
+    z-index: 7;
+    border-radius: 50%;
 }

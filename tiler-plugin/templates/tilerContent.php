@@ -20,18 +20,18 @@ $plugin_dir = plugin_dir_url(dirname(__FILE__, 1));
     const galleryImgs = {
         hospitality: {
             isVisible: false,
-            transform: "matrix3d(1.4, 0, 0, 0, -0.437, 0.4, 1, 0, 0, 0, 0.1, 0.1, 493, 122.1, 0, 1.7)",
+            transform: "matrix3d(1.3, 0, 0, 0, -0.437, 0.4, 1, 0, 0, 0, 0.1, 0.1, 492.9, 132.1, 0, 2)",
             // transform: "perspective(4500px) rotateX(65deg) rotateZ(19deg) rotateY(-6deg) translateY(-10px) translateX(298px) translateZ(-119px) scale(1.2)"
         },
         workspace: {
             isVisible: false,
-            transform: 'matrix3d(1.39, 0, 0, 0, -0.337, 0.06, 1, 0, 0, 0, 0.1, 0.1, 160, 139, 0, 1.3)'
+            transform: 'matrix3d(2.39, 0, 0, 0, -0.3379, 0.26, 1, 0, 0, 0, 0.1, 0.1, 86.7, 441, 0, 2.7)'
             // transform:'matrix3d(0.89, 0, 0, 0, -0.337, 0.06, 1, 0, 0, 0, 0.1, 0.1, 151.2, 120.1, 0, 0.9)'
             // transform: "perspective(4500px) rotateX(68deg) rotateZ(10deg) rotateY(-8deg) translateY(-8px) translateX(-41px) translateZ(-121px)"
         },
         publicspace: {
             isVisible: false,
-            transform: "matrix3d(0.89, 0, 0, 0, -0.437, 0.46, 0.8, 0, -1.2, -2.1, 0, 0, 159.9, 22.7, 0, 1.3)"
+            transform: "matrix3d(0.89, 0, 0, 0, -0.437, 0.46, 0.8, 0, -1.2, -2.1, 0, 0, 159.9, 54.5, 0, 1.6)"
             // transform: "perspective(3400px) rotate3d(1.3, -0.52, 0.6, 46deg) translateX(-65px) translateY(-133px) scale(1.3)"
         },
         myphoto: {
@@ -44,7 +44,7 @@ $plugin_dir = plugin_dir_url(dirname(__FILE__, 1));
     <div class="row">
         <div class="col-md-9" style="margin-top: 50px;">
             <div class="panel with-nav-tabs panel-default">
-                <div class="panel-heading" style="padding-bottom: 0px;border-bottom: 0px;">
+                <div class="panel-heading" style="padding-bottom: 0px;border-bottom: 1px solid;">
                     <ul class="nav nav-tabs" style="display: flex;justify-content: start;" id="tiler-tabs">
                         <li class="active">
                             <a href="#tab1default" data-toggle="tab">Design</a>
@@ -54,7 +54,7 @@ $plugin_dir = plugin_dir_url(dirname(__FILE__, 1));
                         </li>
                     </ul>
                 </div>
-                <div class="panel-body">
+                <div class="panel-body" style="border-top: none;">
                     <div class="tab-content">
                         <div class="tab-pane fade in active" id="tab1default">
                             <div class="row">
@@ -68,7 +68,7 @@ $plugin_dir = plugin_dir_url(dirname(__FILE__, 1));
                                                 </ul>
                                             </div>
                                         </div>
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-3">
                                             <div class="dropdown configurator-item">
                                                 <p style="margin:0px !important; padding:0px !important">Product</p>
                                                 <button id="productBtn" class="dropdown-btn" type="button" data-toggle="dropdown">Select </button>
@@ -102,17 +102,17 @@ $plugin_dir = plugin_dir_url(dirname(__FILE__, 1));
                                                 </ul>
                                             </div>
                                         </div>
-                                        <div class="col-sm-4 controls">
-                                            <p class="title">Tile Direction</p>
+                                        <div class="col-sm-5 controls">
                                             <div class="row">
                                                 <div class="col-sm-5 left-control">
-                                                    <div class="configurator-item direction">
+                                                    <p class="title">Tile Direction</p>
+                                                    <div class="configurator-item direction" style="text-align: center;display:block;">
                                                         <img id="d_vertical" class="orientation-button o-vertical set-angle active" src="<?php echo $plugin_dir; ?>assets/images/button-tiledirection-vertical-off.png" data-angle="0" />
                                                         <img id="d_horizontal" class="orientation-button o-horizontal set-angle" src="<?php echo $plugin_dir; ?>assets/images/button-tiledirection-horiz-off.png" data-angle="90" />
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-7 right-control">
-                                                    <p class="title" style="display: none;">Tile Direction</p>
+                                                    <p style="margin: 0;">&nbsp;</p>
                                                     <div class="configurator-item">
                                                         <img id="fillAll" class="orientation-button icon-btn" src="<?php echo $plugin_dir; ?>assets/images/button-fill-off.png" data-toggle="tooltip" title="Fill All" />
                                                     </div>
@@ -159,18 +159,18 @@ $plugin_dir = plugin_dir_url(dirname(__FILE__, 1));
                             </div>
                             <div class="row p-2">
                                 <div class="col-sm-12">
-                                    <div class="gallery-img-wrapper">
+                                    <div class="gallery-img-wrapper" style="height: auto;">
                                         <div id="hospitality">
-                                            <img class="gallery-img" src="" />
-                                            <img class="gallery-img" src="<?php echo $plugin_dir; ?>assets/images/hospitality-overlay-2000.png" />
+                                            <img class="gallery-img" src="" style="position: static;" />
+                                            <img class="gallery-img" src="<?php echo $plugin_dir; ?>assets/images/hospitality-overlay-2000.png" style="left: 0;" />
                                         </div>
                                         <div id="workspace">
-                                            <img class="gallery-img" src="" />
-                                            <img class="gallery-img" src="<?php echo $plugin_dir; ?>assets/images/workspace-overlay-2000.png" />
+                                            <img class="gallery-img" src="" style="position: static;" />
+                                            <img class="gallery-img" src="<?php echo $plugin_dir; ?>assets/images/workspace-overlay-2000.png" style="left: 0;" />
                                         </div>
                                         <div id="publicspace">
-                                            <img class="gallery-img" src="" />
-                                            <img class="gallery-img" src="<?php echo $plugin_dir; ?>assets/images/public-overlay-2000.png" />
+                                            <img class="gallery-img" src="" style="position: static;" />
+                                            <img class="gallery-img" src="<?php echo $plugin_dir; ?>assets/images/public-overlay-2000.png" style="left: 0;" />
                                         </div>
                                         <div id="myphoto">
                                             <img class="gallery-img" src="" />
