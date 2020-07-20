@@ -19,14 +19,14 @@ class Activate extends BaseController
     public function createPage()
     {
         $args = [
-            'post_title'    => 'Design Studio',
+            'post_title'    => 'EZ Design Studio',
             'post_content'  => '[tiles_generator]',
             'post_status'   => 'publish',
             'post_author'   => 1,
             'post_category' => array(1),
             'post_type'     => 'page'
         ];
-        $page = get_page_by_title('Design Studio', OBJECT, 'page');
+        $page = get_page_by_title('EZ Design Studio', OBJECT, 'page');
 
         if( !empty($page) && $page != null ){
             $args['ID'] = $page->ID;
@@ -35,6 +35,6 @@ class Activate extends BaseController
             wp_insert_post($args);
         }
 
-        copy("$this->plugin_path/templates/tilerTemplate.php", get_stylesheet_directory(). '/page-design-studio.php');
+        copy("$this->plugin_path/templates/tilerTemplate.php", get_stylesheet_directory(). '/page-ez-design-studio.php');
     }
 }

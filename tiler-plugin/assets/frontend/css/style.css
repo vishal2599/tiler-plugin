@@ -34,6 +34,7 @@
     display: inline-block;
     width: 30%;
     padding: 10px;
+    line-height: 15px;
 }
 
 .tiler-area .tile-images {
@@ -335,7 +336,7 @@
 
 .canvas-container,
 .canvas-container * {
-    width: 100%!important;
+    /*width: 100%!important;*/
     min-width: 600px!important;
 }
 
@@ -412,4 +413,70 @@ p.title {
     bottom: -3px;
     z-index: 7;
     border-radius: 50%;
+}
+
+.tiler-hero {
+    background-color: rgba(2, 1, 1, 0);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    transition: background 0.3s, border 0.3s, border-radius 0.3s, box-shadow 0.3s;
+    margin-top: 0px;
+    margin-bottom: 50px;
+    padding: 130px 0px 130px 0px;
+    position: relative;
+    width: 100%;
+}
+
+.tiler-background-overlay {
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    position: absolute;
+    background-color: #000000;
+    opacity: 0.3;
+    transition: background 0.3s, border-radius 0.3s, opacity 0.3s;
+}
+
+.tiler-page-title {
+    position: relative;
+    text-align: center;
+}
+
+.titler h1 {
+    color: #FFFFFF;
+}
+
+section.tiler-hero .breadcrumb {
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    border-radius: 0;
+}
+
+.tiler-breadcrumbs__wrap {
+    display: inline;
+}
+
+.tiler-breadcrumbs__item {
+    display: inline-block;
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+.tiler-breadcrumbs__item-sep,
+span.tiler-breadcrumbs__item-target,
+a.tiler-breadcrumbs__item-link.is-home {
+    color: #fff;
+    font-family: "Tahoma", Sans-serif;
+    font-weight: 600;
+}
+
+.tiler-breadcrumbs__item-sep {
+    margin: 0 5px;
+}
+
+span.tiler-breadcrumbs__item-target {
+    color: #DBDBDB;
 }

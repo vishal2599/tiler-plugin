@@ -3,7 +3,7 @@ var globalWidth = 600;
 var vertCtx, horiCtx;
 jQuery(function() {
 
-    globalWidth = (jQuery('.tiler-area .col-sm-12.relative').width() > 600) ? jQuery('.tiler-area .col-sm-12.relative').width() : 600;
+    // globalWidth = (jQuery('.tiler-area .col-sm-12.relative').width() > 600) ? jQuery('.tiler-area .col-sm-12.relative').width() : 600;
 
     var $ = jQuery;
     var pluginDir = $('input[name="plugindir"]').val();
@@ -163,7 +163,7 @@ jQuery(function() {
                 columnGap: 10
             }
         };
-        pdfMake.createPdf(dd).download();
+        pdfMake.createPdf(dd).download('Wayflor.pdf');
     };
 
     $("#printPDF").on("click", downloadPDF);
@@ -202,12 +202,14 @@ jQuery(function() {
         let tiles = $('#pseudoTileList img');
         let template = "";
         let twillProducts = [];
+        let twillPlankProducts = [];
         let shadowcreteProducts = [];
         let marbleridgeProducts = [];
         let mysticProducts = [];
 
         tiles.map(tileIndex => {
-            if (tiles[tileIndex].dataset.slug.includes('twill')) twillProducts.push(tiles[tileIndex]);
+            if (tiles[tileIndex].dataset.slug.includes('twill-square')) twillProducts.push(tiles[tileIndex]);
+            if (tiles[tileIndex].dataset.slug.includes('twill-plank')) twillPlankProducts.push(tiles[tileIndex]);
             if (tiles[tileIndex].dataset.slug.includes('shadowcrete')) shadowcreteProducts.push(tiles[tileIndex]);
             if (tiles[tileIndex].dataset.slug.includes('marbleridge')) marbleridgeProducts.push(tiles[tileIndex]);
             if (tiles[tileIndex].dataset.slug.includes('mystic')) mysticProducts.push(tiles[tileIndex]);
@@ -231,7 +233,7 @@ jQuery(function() {
         } else {
             template += '<li class="tile-item">' +
                 '<span class="tile-category">Twill Plank</span>' +
-                '<span class="tile-images">' + twillProducts.map(product => getHTML(product, true)).join('') + '</span>' +
+                '<span class="tile-images">' + twillPlankProducts.map(product => getHTML(product, true)).join('') + '</span>' +
                 '</li>';
 
             template += '<li class="tile-item">' +
@@ -775,7 +777,7 @@ jQuery(function() {
                         height: grid,
                         top: j * grid,
                         stroke: 2,
-                        left: i * grid - 25 * 1,
+                        left: i * grid - 25 * 1.5,
                         opacity: 0.2,
                         fill: "rgba(0,0,0,0)",
                         hasControls: false,
@@ -1024,7 +1026,7 @@ jQuery(function() {
                     var rect = new fabric.Rect({
                         width: grid,
                         height: grid,
-                        top: j * grid - 25 * 1,
+                        top: j * grid - 25 * 1.5,
                         stroke: 2,
                         left: i * grid,
                         opacity: 0.2,
@@ -1114,8 +1116,8 @@ jQuery(function() {
 
 });
 
-jQuery(function() {
-    jQuery('.canvas-container').height(jQuery('.canvas-container').outerWidth(true));
-    jQuery('.canvas-container canvas').height(jQuery('.canvas-container canvas').outerWidth(true));
-    jQuery('.canvas-container canvas').height(jQuery('.canvas-container canvas').outerWidth(true));
-});
+// jQuery(function() {
+//     jQuery('.canvas-container').height(jQuery('.canvas-container').outerWidth(true));
+//     jQuery('.canvas-container canvas').height(jQuery('.canvas-container canvas').outerWidth(true));
+//     jQuery('.canvas-container canvas').height(jQuery('.canvas-container canvas').outerWidth(true));
+// });
