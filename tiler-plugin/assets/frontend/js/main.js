@@ -816,30 +816,37 @@ jQuery(function() {
             var tempTop = 0;
             if (target.width > target.height) {
                 $('#d_horizontal').trigger('click');
+                tempLeft = 150;
             } else if (target.width < target.height) {
                 $('#d_vertical').trigger('click');
             }
             // currentAngle = 0;
-            if (currentAngle == 0) {
-                var tempWidth = 300;
-                var tempHeight = 450;
-                tempLeft =
-                    (Math.floor(Math.random() * (tempWidth / width) - 1) + 1) * width;
-                tempTop =
-                    (Math.floor(Math.random() * (tempHeight / height) - 1) + 1) * height;
-            }
+            // if (currentAngle == 0) {
+            //     var tempWidth = 300;
+            //     var tempHeight = 450;
+            //     tempLeft =
+            //         (Math.floor(Math.random() * (tempWidth / width) - 1) + 1) * width;
+            //     tempTop =
+            //         (Math.floor(Math.random() * (tempHeight / height) - 1) + 1) * height;
+            // }
 
-            if (currentAngle == 90) {
-                var tempWidth = 450;
-                var tempHeight = 300;
+            // if (currentAngle == 90) {
+            //     var tempWidth = 450;
+            //     var tempHeight = 300;
 
-                tempLeft =
-                    (Math.floor(Math.random() * (tempWidth / width) - 1) + 1) * width;
-                tempTop =
-                    (Math.floor(Math.random() * (tempHeight / height) - 1) + 1) * height;
-            }
+            //     tempLeft =
+            //         (Math.floor(Math.random() * (tempWidth / width) - 1) + 1) * width;
+            //     tempTop =
+            //         (Math.floor(Math.random() * (tempHeight / height) - 1) + 1) * height;
+            // }
+
+            console.log(target);
+            console.log(verticalTempCanvas);
+            console.log(tempLeft);
+            console.log(tempTop);
 
             fabric.Image.fromURL(
+                // $('#productBtn img').attr('src'),
                 crop(verticalTempCanvas, tempLeft, tempTop, width, height),
                 function(myImg) {
                     var img1 = myImg.set({
@@ -1115,9 +1122,3 @@ jQuery(function() {
 
 
 });
-
-// jQuery(function() {
-//     jQuery('.canvas-container').height(jQuery('.canvas-container').outerWidth(true));
-//     jQuery('.canvas-container canvas').height(jQuery('.canvas-container canvas').outerWidth(true));
-//     jQuery('.canvas-container canvas').height(jQuery('.canvas-container canvas').outerWidth(true));
-// });

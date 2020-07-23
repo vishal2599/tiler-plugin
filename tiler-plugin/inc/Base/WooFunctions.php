@@ -13,6 +13,7 @@ class WooFunctions extends BaseController
     {
         add_action('wp_ajax_ql_woocommerce_ajax_add_to_cart', [$this, 'ql_woocommerce_ajax_add_to_cart']);
         add_action('wp_ajax_nopriv_ql_woocommerce_ajax_add_to_cart', [$this, 'ql_woocommerce_ajax_add_to_cart']);
+        add_action('admin_enqueue_scripts', [$this, 'tiler_image']);
     }
 
     public function ql_woocommerce_ajax_add_to_cart()
@@ -52,4 +53,22 @@ class WooFunctions extends BaseController
 
         wp_die();
     }
+
+    public function tiler_image()
+    {
+        $screens = array('product');
+
+        foreach ($screens as $screen) {
+
+            add_meta_box(
+                'tiler_pattern',
+                __('Tiler Pattern', 'tiler_pattern_textdomain'),
+                'tiler_image_uploader_field',
+                $screen,
+                'side'
+            );
+        }
+    }
+
+
 }
