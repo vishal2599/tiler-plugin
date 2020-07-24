@@ -820,6 +820,9 @@ jQuery(function() {
             } else if (target.width < target.height) {
                 $('#d_vertical').trigger('click');
             }
+            if (target.width == target.height && $('#d_horizontal').hasClass('active')) {
+                tempLeft = 187.001;
+            }
             // currentAngle = 0;
             // if (currentAngle == 0) {
             //     var tempWidth = 300;
