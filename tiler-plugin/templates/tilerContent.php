@@ -20,19 +20,18 @@ $plugin_dir = plugin_dir_url(dirname(__FILE__, 1));
     const galleryImgs = {
         hospitality: {
             isVisible: false,
-            transform: "matrix3d(2.1, 0, 0, 0, -0.59, 0.7, 1.3, 0, 0, 0, 1, 0, 522, 0, 0, 1.4)",
-            // transform: "perspective(4500px) rotateX(65deg) rotateZ(19deg) rotateY(-6deg) translateY(-10px) translateX(298px) translateZ(-119px) scale(1.2)"
+            transform: "matrix3d(1.9, 0, 0, 0, -0.566, 1.9, 0, -0.00287, 0, 0, 1, 0, 432, 0, 0, 1.4)",
+            // transform: "matrix3d(2.1, 0, 0, 0, -0.59, 0.7, 1.3, 0, 0, 0, 1, 0, 522, 0, 0, 1.4)",
         },
         workspace: {
             isVisible: false,
-            transform: 'matrix3d(2.1, 0, 0, 0, -0.5, 0.1, 1.3, 0, 0, 0, 1, 0, -54, 0, 0, 1)'
-            // transform:'matrix3d(0.89, 0, 0, 0, -0.337, 0.06, 1, 0, 0, 0, 0.1, 0.1, 151.2, 120.1, 0, 0.9)'
-            // transform: "perspective(4500px) rotateX(68deg) rotateZ(10deg) rotateY(-8deg) translateY(-8px) translateX(-41px) translateZ(-121px)"
+            transform: 'matrix3d(3.4, 0, 0, 0, -0.23, 1.6, 0, -0.0039, 0, 0, 1, 0, 32, 0, 0, 1.5)'
+            // transform: 'matrix3d(2.1, 0, 0, 0, -0.5, 0.1, 1.3, 0, 0, 0, 1, 0, -54, 0, 0, 1)'
         },
         publicspace: {
             isVisible: false,
-            transform: "matrix3d(2.1, 0, 0, 0, -0.6, 1.1, 1.3, 0, 0, 0, 1, 0, -24, 0, 0, 1.4)"
-            // transform: "perspective(3400px) rotate3d(1.3, -0.52, 0.6, 46deg) translateX(-65px) translateY(-133px) scale(1.3)"
+            transform: "matrix3d(2.3, 0, 0, 0, -0.766, 2.15, 0, -0.00287, 0, 0, 1, 0, -218, 0, 0, 1.4)"
+            // transform: "matrix3d(2.1, 0, 0, 0, -0.6, 1.1, 1.3, 0, 0, 0, 1, 0, -24, 0, 0, 1.4)"
         },
         myphoto: {
             isVisible: false,
@@ -91,8 +90,12 @@ $plugin_dir = plugin_dir_url(dirname(__FILE__, 1));
                                                             $availability = implode(", ", array_values(wc_get_product_terms($product->id, 'pa_lead-time', array('fields' => 'names'))));
                                                             $tiler_image_id = get_post_meta($product->id, '_tiler_pattern', true);
                                                             $featured_img_url = wp_get_attachment_image_src($tiler_image_id, 'full')[0];
+                                                            if (!$featured_img_url) {
+                                                                $featured_img_url = get_the_post_thumbnail_url($product->id);
+                                                            }
+                                                            $terms = get_the_terms( $product->id, 'product_cat' );
                                                         ?>
-                                                            <img class="single-tile-image" data-weight="<?php echo $prodWeight; ?>" data-thickness="<?php echo $prodThickness; ?>" data-size="<?php echo $prodSize; ?>" data-color="<?php echo $prodColors; ?>" data-product-id="<?php echo $product->get_id(); ?>" data-add-to-cart-url="<?php echo $product->get_permalink(); ?>" height="50" width="auto" data-name="<?php echo $product->get_name(); ?>" data-sku="<?php echo $product->get_sku(); ?>" data-slug="<?php echo $product->get_slug(); ?>" src="<?php echo $featured_img_url; ?>" data-availability='<?= $availability ?>' height="50" width="auto">
+                                                            <img class="single-tile-image" data-weight="<?php echo $prodWeight; ?>" data-thickness="<?php echo $prodThickness; ?>" data-size="<?php echo $prodSize; ?>" data-color="<?php echo $prodColors; ?>" data-product-id="<?php echo $product->get_id(); ?>" data-add-to-cart-url="<?php echo $product->get_permalink(); ?>" height="50" width="auto" data-name="<?php echo $product->get_name(); ?>" data-sku="<?php echo $product->get_sku(); ?>" data-cat="<?=$terms[0]->name?>" data-slug="<?php echo $product->get_slug(); ?>" src="<?php echo $featured_img_url; ?>" data-availability='<?= $availability ?>' height="50" width="auto" data-toggle="tooltip" data-placement="bottom" title="<?php echo $product->get_sku() . ' ' . $product->get_name(); ?>">
                                                         <?php endwhile; ?>
                                                         <?php wp_reset_postdata(); ?>
                                                     <?php else :  ?>
@@ -133,10 +136,10 @@ $plugin_dir = plugin_dir_url(dirname(__FILE__, 1));
                                                 <canvas style="border:1px solid #ccc" id="c" width="600" height="600"></canvas>
                                             </div>
                                             <div class="hidden-canvas">
-                                                <canvas style="border:1px solid #ccc" id="tempV" width="450" height="450"></canvas>
+                                                <canvas style="border:1px solid #ccc" id="tempV" width="853" height="2560"></canvas>
                                             </div>
                                             <div class="hidden-canvas">
-                                                <canvas style="border:1px solid #ccc" id="tempH" width="450" height="450"></canvas>
+                                                <canvas style="border:1px solid #ccc" id="tempH" width="2560" height="853"></canvas>
                                             </div>
                                         </div>
                                     </div>
@@ -148,28 +151,28 @@ $plugin_dir = plugin_dir_url(dirname(__FILE__, 1));
                             <div class="row p-2">
                                 <div class="col-sm-12">
                                     <div class="configurator-item active">
-                                        <button class="plugin-red-btn" id="hospitalityBtn" type="button">HOSPITALITY</button>
+                                        <button class="plugin-red-btn" id="hospitalityBtn" type="button" data-key="hospitality">HOSPITALITY</button>
                                     </div>
                                     <div class="configurator-item">
-                                        <button class="plugin-red-btn" id="workspaceBtn" type="button">WORKSPACE</button>
+                                        <button class="plugin-red-btn" id="workspaceBtn" type="button" data-key="workspace">WORKSPACE</button>
                                     </div>
                                     <div class="configurator-item">
-                                        <button class="plugin-red-btn" id="publicspaceBtn" type="button">PUBLIC SPACE</button>
+                                        <button class="plugin-red-btn" id="publicspaceBtn" type="button" data-key="publicspace">PUBLIC SPACE</button>
                                     </div>
                                 </div>
                             </div>
                             <div class="row p-2">
                                 <div class="col-sm-12">
                                     <div class="gallery-img-wrapper" style="height: auto;">
-                                        <div id="hospitality">
+                                        <div id="hospitality" style="overflow: hidden;">
                                             <img class="gallery-img" src="" style="position: static;transform-origin: bottom center 0px;" />
                                             <img class="gallery-img" src="<?php echo $plugin_dir; ?>assets/images/hospitality-overlay-2000.png" style="left: 0;" />
                                         </div>
-                                        <div id="workspace">
+                                        <div id="workspace" style="overflow: hidden;">
                                             <img class="gallery-img" src="" style="position: static;transform-origin: bottom center 0px;" />
                                             <img class="gallery-img" src="<?php echo $plugin_dir; ?>assets/images/workspace-overlay-2000.png" style="left: 0;" />
                                         </div>
-                                        <div id="publicspace">
+                                        <div id="publicspace" style="overflow: hidden;">
                                             <img class="gallery-img" src="" style="position: static;transform-origin: bottom center 0px;" />
                                             <img class="gallery-img" src="<?php echo $plugin_dir; ?>assets/images/public-overlay-2000.png" style="left: 0;" />
                                         </div>
@@ -202,7 +205,7 @@ $plugin_dir = plugin_dir_url(dirname(__FILE__, 1));
                         <div style="display:inline-block;float:left;width: 200px;max-height: 200px;overflow: hidden;padding-left: 10px;">
                             <span style="display:block;line-height: 15px;margin-bottom: 8px;">{{productName}}</span>
                             <span style="display:block;font-size: 13px;line-height: 14px;margin-bottom: 5px;">{{productSKU}}</span>
-                            <a href="{{productURL}}"><img src="<?php echo $plugin_dir; ?>assets/images/icon-info.png" height="20" width="20"></a>
+                            <a href="{{productURL}}" target="_blank"><img src="<?php echo $plugin_dir; ?>assets/images/icon-info.png" height="20" width="20"></a>
                             <img style="cursor:pointer" class="single_add_to_cart_button" rel="nofollow" data-product_id="{{productID}}" data-product_sku="{{productSKU}}" src="<?php echo $plugin_dir; ?>assets/images/icon-addtocart.png" height="20" width="20" />
                         </div>
                     </div>

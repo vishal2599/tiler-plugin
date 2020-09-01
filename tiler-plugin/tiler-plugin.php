@@ -54,7 +54,7 @@ function tiler_image_uploader_field($post = null)
     if ($image_attributes = wp_get_attachment_image_src($value, $image_size)) {
 
         $image = '"><img src="' . $image_attributes[0] . '" />';
-        $display = 'inline-block';
+        $display = 'block';
     }
 
     echo '
@@ -76,10 +76,13 @@ a.tiler_upload_image_button {
 a.tiler_remove_image_button {
     color: red;
 }
+.tiler_upload_image_button img{
+    max-width:100%;
+}
 </style>
     <a href="#" class="tiler_upload_image_button' . $image . '</a>
     <input type="hidden" name="tiler_pattern" id="tiler_pattern" value="' . esc_attr($value) . '" />
-    <a href="#" class="tiler_remove_image_button" style="display:inline-block;display:' . $display . '">Remove image</a>
+    <a href="#" class="tiler_remove_image_button" style="display:' . $display . '">Remove image</a>
 </div>';
 ?>
     <script>

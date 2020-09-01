@@ -3,7 +3,6 @@ var globalWidth = 600;
 var vertCtx, horiCtx;
 jQuery(function() {
 
-    // globalWidth = (jQuery('.tiler-area .col-sm-12.relative').width() > 600) ? jQuery('.tiler-area .col-sm-12.relative').width() : 600;
 
     var $ = jQuery;
     var pluginDir = $('input[name="plugindir"]').val();
@@ -96,7 +95,7 @@ jQuery(function() {
             width = 30,
             pattern = jQuery('.product-pattern.selected')[0].dataset.pattern;
         if (pattern == "square" || pattern == "v-ashlar" || pattern == "h-ashlar") {
-            hgt = width = 80;
+            hgt = width = 35;
         }
 
         let result = arr.map(el => [{
@@ -107,46 +106,57 @@ jQuery(function() {
                     height: hgt,
                     image: el.src
                 },
-                ['PRODUCT:', 'CODE:', 'COLOR:', 'SIZE:', 'THICKNESS:', 'WEIGHT:', 'AVAILIBILITY:'],
-                [' ' + el.productName, ' ' + el.productSKU, ' ' + el.productColor, ' ' + el.productSize, ' ' + el.productThickness, ' ' + el.productWeight, ' ' + el.productAvail]
+                {
+                    width: 200,
+                    columns: [
+                        ['PRODUCT:', 'CODE:', 'COLOR:', 'SIZE:', 'THICKNESS:', 'WEIGHT:', 'AVAILIBILITY:'],
+                        [' ' + el.currentProCat, ' ' + el.productSKU, ' ' + el.productName, ' ' + el.productSize, ' ' + el.productThickness, ' ' + el.productWeight, ' ' + el.productAvail]
+                    ]
+                }
             ]
-        }, '___________________________________________________________\n\n\n']);
+        }, '__________________________________________\n\n\n']);
 
         return result;
     }
 
-    function downloadPDF() {
+    function downloadPDF(inspiration = '') {
         // playground requires you to assign document definition to a variable called dd
         let canvas = document.getElementById('others-div').getElementsByClassName('lower-canvas')[0];
         let generatedImage = canvas.toDataURL();
-
+        var bigImg = (inspiration != '') ? inspiration : generatedImage;
+        var WWidth = (inspiration != '') ? 660 : 430;
+        if (inspiration != '' && jQuery('.tiler-area .plugin-red-btn[data-key="publicspace"]').parent('.configurator-item').hasClass('active')) {
+            WWidth = 480;
+        }
+        if (inspiration != '' && jQuery('.tiler-area .plugin-red-btn[data-key="workspace"]').parent('.configurator-item').hasClass('active')) {
+            WWidth = 700;
+        }
         let dd = {
             pageSize: 'LETTER',
             pageOrientation: 'landscape',
             content: [{
                 alignments: ['left', 'right'],
-                columns: [
+                columns: [{
+                        width: 300,
+                        stack: [{
+                                width: 150,
+                                image: logo
+                            },
+                            '\n\n\n\n',
+                            getTilesDetails(window.tilesFinal)
+                        ]
+                    },
                     [{
-                            width: 150,
-                            image: logo
-                        },
-                        '\n\n\n\n',
-                        getTilesDetails(window.tilesFinal)
-                    ],
-                    [{
-                            width: 350,
-                            height: 350,
-                            image: generatedImage
+                            width: WWidth,
+                            image: bigImg
                         },
                         {
-                            width: 350,
-                            height: 18,
+                            width: 430,
                             image: pdf1
                         },
-                        '\n\n\n\n',
                         {
-                            width: 350,
-                            height: 90,
+                            width: 430,
+                            height: 80,
                             image: pdf2
                         }
                     ]
@@ -164,9 +174,23 @@ jQuery(function() {
             }
         };
         pdfMake.createPdf(dd).download('Wayflor.pdf');
+        jQuery("#printPDF").text('Save spec sheet PDF').removeClass('downloading');
     };
 
-    $("#printPDF").on("click", downloadPDF);
+    jQuery("#printPDF").on("click", function() {
+        if (!jQuery(this).hasClass('downloading')) {
+            jQuery(this).text('Downloading PDF ...').addClass('downloading');
+            if (jQuery('a[href="#tab2default"]').parent('li').hasClass('active')) {
+                var key = jQuery('#tab2default .configurator-item.active button').data('key');
+                var node = document.getElementById(key);
+                domtoimage.toPng(node).then(function(dataUrl) {
+                    downloadPDF(dataUrl);
+                });
+            } else {
+                downloadPDF();
+            }
+        }
+    });
 
 
 
@@ -199,6 +223,12 @@ jQuery(function() {
     }
 
     function createProductDropdown(productType) {
+        $('#pseudoTileList img').sort(sort_pro) // sort elements
+            .appendTo('#pseudoTileList'); // append again to the list
+        // sort function callback
+        function sort_pro(a, b) {
+            return ($(b).data('sku')) < ($(a).data('sku')) ? 1 : -1;
+        }
         let tiles = $('#pseudoTileList img');
         let template = "";
         let twillProducts = [];
@@ -206,6 +236,7 @@ jQuery(function() {
         let shadowcreteProducts = [];
         let marbleridgeProducts = [];
         let mysticProducts = [];
+        let sandScriptProducts = [];
 
         tiles.map(tileIndex => {
             if (tiles[tileIndex].dataset.slug.includes('twill-square')) twillProducts.push(tiles[tileIndex]);
@@ -213,6 +244,7 @@ jQuery(function() {
             if (tiles[tileIndex].dataset.slug.includes('shadowcrete')) shadowcreteProducts.push(tiles[tileIndex]);
             if (tiles[tileIndex].dataset.slug.includes('marbleridge')) marbleridgeProducts.push(tiles[tileIndex]);
             if (tiles[tileIndex].dataset.slug.includes('mystic')) mysticProducts.push(tiles[tileIndex]);
+            if (tiles[tileIndex].dataset.cat.includes('Sandscript')) sandScriptProducts.push(tiles[tileIndex]);
         });
 
         if (productType === "square") {
@@ -240,9 +272,15 @@ jQuery(function() {
                 '<span class="tile-category">Mystic Plank</span>' +
                 '<span class="tile-images">' + mysticProducts.map(product => getHTML(product, true)).join('') + '</span>' +
                 '</li>';
+
+            template += '<li class="tile-item">' +
+                '<span class="tile-category">Sandscript Major</span>' +
+                '<span class="tile-images">' + sandScriptProducts.map(product => getHTML(product, true)).join('') + '</span>' +
+                '</li>';
         }
 
         $('#tile-list').html(template);
+        $('[data-toggle="tooltip"]').tooltip();
         jQuery(".single-tile-image").click(function(ret) {
             jQuery('#productBtn').html(`<img crossorigin="anonymous" src="${ret.target.src}"/><span>${ret.target.dataset.name}</span>`);
             vertCtx = verticalTempCanvas.getContext("2d");
@@ -254,7 +292,10 @@ jQuery(function() {
                 horiCtx.clearRect(0, 0, 450, 450);
             }
 
+            console.log(ret.target.dataset.cat);
+
             currentTileSize = ret.target.dataset.size;
+            currentProCat = ret.target.dataset.cat;
             currentTileColor = ret.target.dataset.color;
             currentTileWeight = ret.target.dataset.weight;
             currentTileThickness = ret.target.dataset.thickness;
@@ -307,17 +348,14 @@ jQuery(function() {
         });
     }
 
-
-
-    // $('#productBtn').html(`<img crossorigin="anonymous" src="${$('#pseudoTileList img')[0].src}"/><span>${$('#pseudoTileList img')[0].dataset.name}</span>`);
-
     function setupGalleryImage(key) {
         if (key == 'hospitality') {
             $('.configurator-item').removeClass('active');
             $("#hospitalityBtn").parent().addClass('active');
         }
-        // jQuery('.tiler-area .gallery-img-wrapper').height(jQuery('.tiler-area .gallery-img-wrapper').outerWidth(true));
+
         let canvas = document.getElementById('others-div').getElementsByClassName('lower-canvas')[0];
+        let canvas1 = document.getElementById('hospitality');
         let setupObj = galleryImgs[key];
 
         for (const prop in galleryImgs) {
@@ -330,6 +368,8 @@ jQuery(function() {
 
 
         let generatedImage = canvas.toDataURL();
+
+        // console.log(canvas1.toDataURL());
 
         $('#' + key + ' img')[0].src = generatedImage || "https://www.publicdomainpictures.net/download-picture.php?id=28763&check=40d0c7d2a335794339b3a2023655e58f";
         $('#' + key + ' img')[0].style.transform = setupObj.transform;
@@ -370,16 +410,14 @@ jQuery(function() {
     var currentAngle = 0;
 
     // The crop function
-    var crop = function(canvas, offsetX, offsetY, width, height) {
-        if (width == 37.5 || width == 112.5) {
-            width += 2;
-        }
+    var crop = function(url, offsetX, offsetY, width, height) {
         var ctx;
-        if (currentAngle == 0) {
-            ctx = verticalTempCanvas.getContext("2d");
-        } else {
-            ctx = horizontalTempCanvas.getContext("2d");
-        }
+        // if (currentAngle == 0) {
+        //     ctx = verticalTempCanvas.getContext("2d");
+        // } else {
+        //     ctx = horizontalTempCanvas.getContext("2d");
+        // }
+        ctx = verticalTempCanvas.getContext("2d");
         var imgData = ctx.getImageData(offsetX, offsetY, width, height);
         // create an in-memory canvas
         var buffer = document.createElement("canvas");
@@ -417,30 +455,27 @@ jQuery(function() {
     });
 
     jQuery("#fillAll").on("click", function(ret) {
+        canvas.clear();
         selectedProduct = jQuery('.product-pattern.selected')[0].dataset.pattern;
-        handleGridSelector(selectedProduct, currentTileImageSource, true);
-        setupGalleryImage('hospitality');
+        handleGridSelector(selectedProduct);
+        fillAll();
     });
 
     jQuery("#undo").on("click", function(ret) {
-        canvas.loadFromJSON(actionArray[actionArray.length - 2], function() {
-            var objects = canvas.getObjects();
-            objects.map(obj => {
-                obj.on("mousedown", function(event) {
-                    handleAddTile(event.target);
-                });
-            });
-            actionArray.pop();
-            canvas.renderAll();
 
+        var h = [];
+        if (canvas._objects.length > 0) {
+            h.push(canvas._objects.pop());
+            canvas.renderAll();
             calculateSelectedTiles();
-        });
+        }
         setupGalleryImage('hospitality');
     });
 
     jQuery("#clear").on("click", function(ret) {
         actionArray = [];
         canvas.clear();
+        selectedProduct = jQuery('.product-pattern.selected')[0].dataset.pattern;
         handleGridSelector(selectedProduct);
         document.getElementById("selected-product-list").innerHTML = "";
         document.getElementById("printPDF").style.display = "none";
@@ -520,6 +555,7 @@ jQuery(function() {
                 createPlankAshlar(selectedTile);
                 break;
             case 'herringbone':
+                console.log('here');
                 $('p.title').hide();
                 $('.right-control p.title').show();
                 $('.left-control').css({
@@ -798,64 +834,63 @@ jQuery(function() {
     }
 
     function fillAll() {
-        canvas.clear();
-        var objs = [];
-        var objs = rectArray.map(function(o) {
-            // currentAngle = o.width >= o.height ? 90 : 0;
-            handleAddTile(o);
-            return o.set("active", true);
-        });
-
+        fill(rectArray, 0, rectArray.length);
         setupGalleryImage('hospitality');
+    }
+
+    function fill(o, i, l) {
+        var g = false;
+        if (i < l) {
+            g = handleAddTile(o[i]);
+            setTimeout(function() {
+                if (g) {
+                    i = i + 1;
+                    fill(o, i, l);
+                }
+            }, 300);
+        }
     }
 
     function handleAddTile(target) {
         if ($('#productBtn').text() != 'Select') {
+            // console.log(target);
             const { left, top, height, width } = target;
-            var tempLeft = 0;
-            var tempTop = 0;
+            var tempLeft1 = left;
+            var tempTop1 = top;
+            var tempHeight1 = height;
+            var tempWidth1 = width;
+            var tempWidth = 600;
+            var tempHeight = 600;
             if (target.width > target.height) {
                 $('#d_horizontal').trigger('click');
-                tempLeft = 150;
+                tempLeft1 = left + 50;
+                tempTop1 = top - 50;
+                tempWidth1 = height;
+                tempHeight1 = width;
+                tempWidth = 600;
+                tempHeight = 2000;
             } else if (target.width < target.height) {
                 $('#d_vertical').trigger('click');
+                tempWidth = 600;
+                tempHeight = 2000;
             }
-            if (target.width == target.height && $('#d_horizontal').hasClass('active')) {
-                tempLeft = 187.001;
-            }
-            // currentAngle = 0;
-            // if (currentAngle == 0) {
-            //     var tempWidth = 300;
-            //     var tempHeight = 450;
-            //     tempLeft =
-            //         (Math.floor(Math.random() * (tempWidth / width) - 1) + 1) * width;
-            //     tempTop =
-            //         (Math.floor(Math.random() * (tempHeight / height) - 1) + 1) * height;
-            // }
 
-            // if (currentAngle == 90) {
-            //     var tempWidth = 450;
-            //     var tempHeight = 300;
+            tempLeft =
+                (Math.floor(Math.random() * (tempWidth / tempWidth1) - 1) + 1) * tempWidth1;
+            tempTop =
+                (Math.floor(Math.random() * (tempHeight / tempHeight1) - 1) + 1) * tempHeight1;
 
-            //     tempLeft =
-            //         (Math.floor(Math.random() * (tempWidth / width) - 1) + 1) * width;
-            //     tempTop =
-            //         (Math.floor(Math.random() * (tempHeight / height) - 1) + 1) * height;
-            // }
-
-            console.log(target);
-            console.log(verticalTempCanvas);
-            console.log(tempLeft);
-            console.log(tempTop);
+            var m = 3;
 
             fabric.Image.fromURL(
                 // $('#productBtn img').attr('src'),
-                crop(verticalTempCanvas, tempLeft, tempTop, width, height),
+                crop(verticalTempCanvas, tempLeft, tempTop, tempWidth1 * m, tempHeight1 * m),
                 function(myImg) {
                     var img1 = myImg.set({
-                        top: top,
-                        left: left,
+                        top: tempTop1,
+                        left: tempLeft1,
                         product: currentTileImageID,
+                        currentProCat: currentProCat,
                         productSize: currentTileSize,
                         productWeight: currentTileWeight,
                         productThickness: currentTileThickness,
@@ -870,10 +905,19 @@ jQuery(function() {
                         selectable: false
                     });
 
+                    img1.crossOrigin = 'anonymous';
+
                     img1.on("mousedown", function(event) {
+                        event.target.width = width;
+                        event.target.height = height;
+                        event.target.left = left;
+                        event, target.top = top;
                         handleImageTileClick(event.target);
                     });
 
+                    img1.scaleToHeight(tempHeight1);
+                    img1.scaleToWidth(tempWidth1);
+                    img1.rotate(currentAngle);
                     canvas.add(img1);
                     actionArray.push(
                         JSON.stringify(
@@ -881,6 +925,7 @@ jQuery(function() {
                                 "productURL",
                                 "productID",
                                 "product",
+                                "currentProCat",
                                 "productSize",
                                 "productWeight",
                                 "productColor",
@@ -896,10 +941,12 @@ jQuery(function() {
                     );
 
                     calculateSelectedTiles();
-                }
+                }, { crossOrigin: 'anonymous' }
             );
             setupGalleryImage('hospitality');
+            return true;
         }
+
     }
 
     function calculateSelectedTiles() {
@@ -908,6 +955,7 @@ jQuery(function() {
                 "productURL",
                 "productID",
                 "product",
+                "currentProCat",
                 "productSKU",
                 "productSize",
                 "productWeight",
@@ -951,8 +999,13 @@ jQuery(function() {
 
         var html = templateScript(context);
         document.getElementById("selected-product-list").innerHTML = html;
-        document.getElementById("printPDF").style.display = "block";
-        document.getElementById("printPDFLabel").style.display = "block";
+        if (html) {
+            document.getElementById("printPDF").style.display = "block";
+            document.getElementById("printPDFLabel").style.display = "block";
+        } else {
+            document.getElementById("printPDF").style.display = "none";
+            document.getElementById("printPDFLabel").style.display = "none";
+        }
         jQuery(".single_add_to_cart_button").click(function(event) {
 
             event.preventDefault();
@@ -1001,6 +1054,10 @@ jQuery(function() {
                 }
             });
         });
+        if (tilesFinal.length == 0) {
+            document.getElementById("printPDF").style.display = "none";
+            document.getElementById("printPDFLabel").style.display = "none";
+        }
     }
 
     function handleImageTileClick(target) {

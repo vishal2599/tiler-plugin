@@ -480,3 +480,9 @@ a.tiler-breadcrumbs__item-link.is-home {
 span.tiler-breadcrumbs__item-target {
     color: #DBDBDB;
 }
+
+.downloading {
+    background-color: #000;
+    cursor: default;
+    pointer-events: none;
+}
