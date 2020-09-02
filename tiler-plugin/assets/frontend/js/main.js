@@ -67,10 +67,10 @@ jQuery(function() {
     getDataUri(pluginDir + "assets/images/Wayflor-FeatureIcons.jpg", function(dataUri) {
         logo1 = dataUri;
     });
-    getDataUri(pluginDir + "assets/images/pdf1.png", function(dataUri) {
+    getDataUri(pluginDir + "assets/images/bottom-contact.png", function(dataUri) {
         pdf1 = dataUri;
     });
-    getDataUri(pluginDir + "assets/images/pdf2.png", function(dataUri) {
+    getDataUri(pluginDir + "assets/images/bottom-logos.png", function(dataUri) {
         pdf2 = dataUri;
     });
 
@@ -95,7 +95,7 @@ jQuery(function() {
             width = 30,
             pattern = jQuery('.product-pattern.selected')[0].dataset.pattern;
         if (pattern == "square" || pattern == "v-ashlar" || pattern == "h-ashlar") {
-            hgt = width = 35;
+            hgt = width = 40;
         }
 
         let result = arr.map(el => [{
@@ -107,14 +107,20 @@ jQuery(function() {
                     image: el.src
                 },
                 {
-                    width: 200,
-                    columns: [
-                        ['PRODUCT:', 'CODE:', 'COLOR:', 'SIZE:', 'THICKNESS:', 'WEIGHT:', 'AVAILIBILITY:'],
-                        [' ' + el.currentProCat, ' ' + el.productSKU, ' ' + el.productName, ' ' + el.productSize, ' ' + el.productThickness, ' ' + el.productWeight, ' ' + el.productAvail]
-                    ]
+                    style: 'specs',
+                    width: 140,
+                    table: {
+                        widths: [35, 105],
+                        body: [
+                            ['STYLE:', el.currentProCat],
+                            ['CODE:', el.productSKU],
+                            ['COLOR:', el.productName]
+                        ]
+                    },
+                    layout: 'noBorders',
                 }
             ]
-        }, '__________________________________________\n\n\n']);
+        }, '_______________________________________\n\n']);
 
         return result;
     }
@@ -124,12 +130,12 @@ jQuery(function() {
         let canvas = document.getElementById('others-div').getElementsByClassName('lower-canvas')[0];
         let generatedImage = canvas.toDataURL();
         var bigImg = (inspiration != '') ? inspiration : generatedImage;
-        var WWidth = (inspiration != '') ? 660 : 430;
+        var WWidth = (inspiration != '') ? 710 : 460;
         if (inspiration != '' && jQuery('.tiler-area .plugin-red-btn[data-key="publicspace"]').parent('.configurator-item').hasClass('active')) {
-            WWidth = 480;
+            WWidth = 530;
         }
         if (inspiration != '' && jQuery('.tiler-area .plugin-red-btn[data-key="workspace"]').parent('.configurator-item').hasClass('active')) {
-            WWidth = 700;
+            WWidth = 750;
         }
         let dd = {
             pageSize: 'LETTER',
@@ -137,7 +143,7 @@ jQuery(function() {
             content: [{
                 alignments: ['left', 'right'],
                 columns: [{
-                        width: 300,
+                        width: 240,
                         stack: [{
                                 width: 150,
                                 image: logo
@@ -147,27 +153,34 @@ jQuery(function() {
                         ]
                     },
                     [{
-                            width: WWidth,
-                            image: bigImg
-                        },
-                        {
-                            width: 430,
-                            image: pdf1
-                        },
-                        {
-                            width: 430,
-                            height: 80,
-                            image: pdf2
-                        }
-                    ]
+                        width: WWidth,
+                        image: bigImg,
+                        alignment: 'right'
+                    }]
                 ]
             }],
+            footer: function(currentPage, pageCount) {
+                if (currentPage == pageCount)
+                    return [{
+                            image: pdf1,
+                            width: 240,
+                            alignment: 'left',
+                            absolutePosition: { x: 30, y: -50 }
+                        },
+                        {
+                            image: pdf2,
+                            width: 320,
+                            alignment: 'right',
+                            margin: [40, 0, 0, 0],
+                            absolutePosition: { x: -30, y: -30 }
+                        }
+                    ];
+            },
             styles: {
                 label: {
-                    fontSize: 10,
-                    // 					font: 'Montserrat',
+                    fontSize: 9,
                     color: 'grey'
-                }
+                },
             },
             defaultStyle: {
                 columnGap: 10

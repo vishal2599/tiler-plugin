@@ -293,7 +293,7 @@
 
 .tiler-area .hidden-canvas {
     position: absolute;
-    top: 0;
+    top: -2560px;
     height: 100%;
     width: 100%;
     visibility: hidden;
